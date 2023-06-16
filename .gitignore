@@ -1,0 +1,4 @@
+/.idea/
+/telegram-bot/target/
+/telegram-bot/src/main/resources/application.properties
+/logs/
