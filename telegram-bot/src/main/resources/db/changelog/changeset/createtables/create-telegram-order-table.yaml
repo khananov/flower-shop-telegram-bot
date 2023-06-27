@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-order
+      author: khananov
+      changes:
+        - createTable:
+            tableName: telegram_order
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: telegram_user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_status
+                  type: varchar (20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: updated_at
+                  type: timestamp
+
+        - addForeignKeyConstraint:
+            baseColumnNames: telegram_user_id
+            baseTableName: telegram_order
+            constraintName: fk_order_telegram_user_id
+            onDelete: cascade
+            referencedColumnNames: id
+            referencedTableName: telegram_user

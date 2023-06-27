@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-product-for-cart
+      author: khananov
+      changes:
+        - createTable:
+            tableName: product_for_cart
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: bigint
+              - column:
+                  name: price
+                  type: bigint
+
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: product_for_cart
+            constraintName: fk_product_for_cart_product_id
+            onDelete: cascade
+            referencedColumnNames: id
+            referencedTableName: product
+
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: product_for_cart
+            constraintName: fk_product_for_cart_order_id
+            onDelete: cascade
+            referencedColumnNames: id
+            referencedTableName: telegram_order
