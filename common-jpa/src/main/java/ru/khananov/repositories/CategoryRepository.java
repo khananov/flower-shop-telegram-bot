@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.khananov.models.entities.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Long, Category> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 }

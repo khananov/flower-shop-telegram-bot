@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.khananov.models.entities.TelegramUser;
 
 @Repository
-public interface TelegramUserRepository extends JpaRepository<Long, TelegramUser> {
+public interface TelegramUserRepository extends JpaRepository<TelegramUser, Long> {
 }

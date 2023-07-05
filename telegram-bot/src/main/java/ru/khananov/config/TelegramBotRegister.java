@@ -10,7 +10,9 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class TelegramBotRegister {
 
     @Bean
-    public TelegramBotsApi telegramBotsApi() throws TelegramApiException {
-        return new TelegramBotsApi(DefaultBotSession.class);
+    public TelegramBotsApi telegramBotsApi(TelegramBotConfig telegramBotConfig) throws TelegramApiException {
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+        telegramBotsApi.registerBot(telegramBotConfig);
+        return telegramBotsApi;
     }
 }

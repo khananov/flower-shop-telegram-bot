@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.khananov.models.entities.ProductForCart;
 
 @Repository
-public interface ProductForCartRepository extends JpaRepository<Long, ProductForCart> {
+public interface ProductForCartRepository extends JpaRepository<ProductForCart, Long> {
 }

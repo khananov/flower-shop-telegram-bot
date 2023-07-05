@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.khananov.models.entities.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Long, Product> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }

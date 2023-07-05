@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.khananov.models.entities.Order;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Long, Order> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }
