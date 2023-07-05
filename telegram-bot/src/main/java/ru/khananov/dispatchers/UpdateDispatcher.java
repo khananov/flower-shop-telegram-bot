@@ -24,10 +24,7 @@ public class UpdateDispatcher {
         }
 
         if (update.hasMessage()) {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId());
-            message.setText("Hello");
-            telegramService.sendMessage(message);
+            telegramService.sendMenu(update.getMessage().getChatId());
         } else {
             log.error("Unsupported message type is received" + update);
         }

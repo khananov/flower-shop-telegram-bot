@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public enum Commands implements Serializable {
     START_COMMAND("/start"),
-    CART_COMMAND("/cart"),
-    CATALOG_COMMAND("/catalog"),
-    PROFILE_COMMAND("/profile"),
-    NEXT_STEP_COMMAND("/next"),
-    PREVIOUS_STEP_COMMAND("/previous");
+    CART_COMMAND("Корзина"),
+    CATALOG_COMMAND("Каталог"),
+    PROFILE_COMMAND("Профиль"),
+    NEXT_STEP_COMMAND("Дальше"),
+    PREVIOUS_STEP_COMMAND("Назад");
 
     private final String value;
 
