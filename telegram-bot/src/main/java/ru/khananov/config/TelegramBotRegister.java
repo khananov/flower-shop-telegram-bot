@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
-public class TelegramConfig {
+public class TelegramBotRegister {
 
     @Bean
     public TelegramBotsApi telegramBotsApi() throws TelegramApiException {

@@ -57,5 +57,11 @@
             <artifactId>liquibase-core</artifactId>
             <version>4.22.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>ru.khananov</groupId>
+            <artifactId>common-jpa</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
