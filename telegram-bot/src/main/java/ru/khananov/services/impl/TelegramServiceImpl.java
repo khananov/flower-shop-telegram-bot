@@ -12,15 +12,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.khananov.exceptions.SendMessageException;
 import ru.khananov.services.TelegramService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton.builder;
 import static ru.khananov.commands.Commands.*;
 
-@Service
 @Log4j2
+@Service
 public class TelegramServiceImpl extends DefaultAbsSender implements TelegramService {
     protected TelegramServiceImpl(@Value("${telegram-bot.token}") String botToken) {
         super(new DefaultBotOptions(), botToken);
@@ -49,14 +47,14 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
         sendMessage(message);
     }
 
-    public ReplyKeyboardMarkup createGeneralMenuKeyboard() {
+    private ReplyKeyboardMarkup createGeneralMenuKeyboard() {
         ReplyKeyboardMarkup.ReplyKeyboardMarkupBuilder keyboardBuilder = ReplyKeyboardMarkup.builder();
         keyboardBuilder.resizeKeyboard(true);
         keyboardBuilder.selective(true);
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
-                builder().text(CART_COMMAND.getValue()).build(),
-                builder().text(CATALOG_COMMAND.getValue()).build())));
+                builder().text(CATALOG_COMMAND.getValue()).build(),
+                builder().text(CART_COMMAND.getValue()).build())));
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 builder().text(PROFILE_COMMAND.getValue()).build())));

@@ -3,18 +3,19 @@ package ru.khananov.dispatchers;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.khananov.services.TelegramService;
+import ru.khananov.controllers.StartController;
+import ru.khananov.exceptions.UnsupportedMessageTypeException;
 
-@Component
 @Log4j2
+@Component
 public class UpdateDispatcher {
-    private final TelegramService telegramService;
+    private final StartController startController;
 
     @Autowired
-    public UpdateDispatcher(TelegramService telegramService) {
-        this.telegramService = telegramService;
+    public UpdateDispatcher(StartController startController) {
+        this.startController = startController;
     }
 
     public void processUpdate(Update update) {
@@ -24,9 +25,18 @@ public class UpdateDispatcher {
         }
 
         if (update.hasMessage()) {
-            telegramService.sendMenu(update.getMessage().getChatId());
+            distributeMessageByCommand(update);
         } else {
-            log.error("Unsupported message type is received" + update);
+            log.error(new UnsupportedMessageTypeException("Неподдерживаемый тип сообщения"));
+        }
+    }
+
+    private void distributeMessageByCommand(Update update) {
+        Message message = update.getMessage();
+
+        switch (message.getText()) {
+            case "/start" -> startController.startMethod(update);
+//            case CATALOG_COMMAND -> startController.send(update);
         }
     }
 }

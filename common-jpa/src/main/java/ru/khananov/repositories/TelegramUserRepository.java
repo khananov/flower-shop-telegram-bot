@@ -6,4 +6,5 @@ import ru.khananov.models.entities.TelegramUser;
 
 @Repository
 public interface TelegramUserRepository extends JpaRepository<TelegramUser, Long> {
+    TelegramUser findByChatId(Long chatId);
 }
