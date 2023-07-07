@@ -6,4 +6,6 @@ public interface TelegramService {
     void sendMessage(SendMessage message);
 
     void sendMenu(Long chatId);
+
+    void sendCategoriesKeyboardMarkup(Long chatId);
 }

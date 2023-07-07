@@ -25,8 +25,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
         if (telegramUser == null) {
             return telegramUserRepository.save(buildTelegramUser(message));
         } else {
-            telegramUser.setIsActive(true);
-            return telegramUserRepository.save(telegramUser);
+            return setActive(telegramUser);
         }
     }
 
@@ -37,5 +36,10 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 lastName(message.getChat().getLastName()).
                 username(message.getChat().getUserName()).
                 isActive(true).build();
+    }
+
+    private TelegramUser setActive(TelegramUser telegramUser) {
+        telegramUser.setIsActive(true);
+        return telegramUserRepository.save(telegramUser);
     }
 }
