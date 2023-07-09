@@ -3,24 +3,41 @@ package ru.khananov.dispatchers;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.khananov.controllers.CatalogController;
-import ru.khananov.controllers.StartController;
+import ru.khananov.controllers.TelegramController;
+import ru.khananov.controllers.impl.CartController;
+import ru.khananov.controllers.impl.CatalogController;
+import ru.khananov.controllers.impl.CategoryController;
+import ru.khananov.controllers.impl.StartController;
 import ru.khananov.exceptions.UnsupportedMessageTypeException;
 
-import static ru.khananov.commands.Commands.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Log4j2
 @Component
 public class UpdateDispatcher {
     private final StartController startController;
     private final CatalogController catalogController;
+    private final CategoryController categoryController;
+    private final CartController cartController;
 
     @Autowired
-    public UpdateDispatcher(StartController startController, CatalogController catalogController) {
+    public UpdateDispatcher(StartController startController,
+                            CatalogController catalogController,
+                            CategoryController categoryController,
+                            CartController cartController) {
         this.startController = startController;
         this.catalogController = catalogController;
+        this.categoryController = categoryController;
+        this.cartController = cartController;
+    }
+
+    private List<TelegramController> getControllers() {
+        return Arrays.asList(
+                startController,
+                catalogController,
+                categoryController);
     }
 
     public void processUpdate(Update update) {
@@ -38,19 +55,13 @@ public class UpdateDispatcher {
     }
 
     private void distributeMessageByCommand(Update update) {
-        Message message = update.getMessage();
-
-        if (message.getText().equals(START_COMMAND.getValue()))
-            startController.startMethod(update);
-        else if (message.getText().equals(CATALOG_COMMAND.getValue()))
-            catalogController.sendCategories(update);
-//        else if (message.getText().equals(CATALOG_COMMAND.getValue()))
-//            catalogController
-//        else if (message.getText().equals(CATALOG_COMMAND.getValue()))
-//            catalogController
+        getControllers().stream()
+                .filter(controller -> controller.support(update.getMessage().getText()))
+                .findFirst()
+                .ifPresent(controller -> controller.execute(update));
     }
 
     private void distributeCallbackQuery(Update update) {
-        catalogController.sendProductsByCategory(update, update.getCallbackQuery());
+
     }
 }

@@ -3,3 +3,4 @@
 /telegram-bot/src/main/resources/application.properties
 /logs/
 /common-jpa/target/
+/FlowerShopTelegramBot.iml
