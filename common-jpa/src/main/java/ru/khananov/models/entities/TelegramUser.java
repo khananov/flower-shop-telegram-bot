@@ -48,6 +48,6 @@ public class TelegramUser implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "telegramUser")
-    private List<Order> orders;
+    @OneToOne(mappedBy = "telegramUser", fetch = FetchType.EAGER)
+    private Order order;
 }

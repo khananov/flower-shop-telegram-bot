@@ -9,6 +9,7 @@ import ru.khananov.models.enums.OrderStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -28,12 +29,12 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "telegram_user_id", referencedColumnName = "id")
     private TelegramUser telegramUser;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<ProductForCart> productForCart;
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    private List<ProductForCart> productsForCart;
 
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)

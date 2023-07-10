@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.Command;
 import ru.khananov.models.domains.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
@@ -23,9 +22,11 @@ public class StartController implements TelegramController {
     }
 
     @Override
-    public boolean support(String command) {
-        return (command.equals(START_COMMAND.getValue()) ||
-                command.equals(MAIN_MENU_COMMAND.getValue()));
+    public boolean support(Update update) {
+        if (!update.hasMessage()) return false;
+
+        return (update.getMessage().getText().equals(START_COMMAND.getValue()) ||
+                update.getMessage().getText().equals(MAIN_MENU_COMMAND.getValue()));
     }
 
     @Override

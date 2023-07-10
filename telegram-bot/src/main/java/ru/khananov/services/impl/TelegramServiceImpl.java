@@ -12,18 +12,15 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.khananov.exceptions.SendMessageException;
-import ru.khananov.services.CategoryService;
 import ru.khananov.services.TelegramService;
 
 @Log4j2
 @Service
 public class TelegramServiceImpl extends DefaultAbsSender implements TelegramService {
-    private final CategoryService categoryService;
 
     @Autowired
-    public TelegramServiceImpl(@Value("${telegram-bot.token}") String botToken, CategoryService categoryService) {
+    public TelegramServiceImpl(@Value("${telegram-bot.token}") String botToken) {
         super(new DefaultBotOptions(), botToken);
-        this.categoryService = categoryService;
     }
 
     @Override

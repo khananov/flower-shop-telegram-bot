@@ -6,4 +6,5 @@ import ru.khananov.models.entities.ProductForCart;
 
 @Repository
 public interface ProductForCartRepository extends JpaRepository<ProductForCart, Long> {
+    ProductForCart findByProductId(Long id);
 }

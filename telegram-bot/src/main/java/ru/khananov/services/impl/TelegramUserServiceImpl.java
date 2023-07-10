@@ -19,8 +19,13 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     }
 
     @Override
+    public TelegramUser findByChatId(Long chatId) {
+        return telegramUserRepository.findByChatId(chatId);
+    }
+
+    @Override
     public TelegramUser registerUser(Message message) {
-        TelegramUser telegramUser = telegramUserRepository.findByChatId(message.getChatId());
+        TelegramUser telegramUser = findByChatId(message.getChatId());
 
         if (telegramUser == null) {
             return telegramUserRepository.save(buildTelegramUser(message));

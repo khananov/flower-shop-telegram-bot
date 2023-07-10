@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.controllers.impl.CartController;
-import ru.khananov.controllers.impl.CatalogController;
-import ru.khananov.controllers.impl.CategoryController;
-import ru.khananov.controllers.impl.StartController;
+import ru.khananov.controllers.impl.*;
 import ru.khananov.exceptions.UnsupportedMessageTypeException;
 
 import java.util.Arrays;
@@ -21,23 +18,28 @@ public class UpdateDispatcher {
     private final CatalogController catalogController;
     private final CategoryController categoryController;
     private final CartController cartController;
+    private final BuyController buyController;
 
     @Autowired
     public UpdateDispatcher(StartController startController,
                             CatalogController catalogController,
                             CategoryController categoryController,
-                            CartController cartController) {
+                            CartController cartController,
+                            BuyController buyController) {
         this.startController = startController;
         this.catalogController = catalogController;
         this.categoryController = categoryController;
         this.cartController = cartController;
+        this.buyController = buyController;
     }
 
     private List<TelegramController> getControllers() {
         return Arrays.asList(
                 startController,
                 catalogController,
-                categoryController);
+                categoryController,
+                cartController,
+                buyController);
     }
 
     public void processUpdate(Update update) {
@@ -46,22 +48,16 @@ public class UpdateDispatcher {
             return;
         }
 
-        if (update.hasMessage())
+        if (update.hasMessage() || update.hasCallbackQuery())
             distributeMessageByCommand(update);
-        else if (update.hasCallbackQuery())
-            distributeCallbackQuery(update);
         else
             log.error(new UnsupportedMessageTypeException("Неподдерживаемый тип сообщения"));
     }
 
     private void distributeMessageByCommand(Update update) {
         getControllers().stream()
-                .filter(controller -> controller.support(update.getMessage().getText()))
+                .filter(controller -> controller.support(update))
                 .findFirst()
                 .ifPresent(controller -> controller.execute(update));
-    }
-
-    private void distributeCallbackQuery(Update update) {
-
     }
 }

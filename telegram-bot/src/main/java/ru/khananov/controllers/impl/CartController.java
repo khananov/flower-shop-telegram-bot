@@ -8,7 +8,8 @@ import ru.khananov.controllers.TelegramController;
 public class CartController implements TelegramController {
 
     @Override
-    public boolean support(String command) {
+    public boolean support(Update update) {
+        if (!update.hasMessage()) return false;
         return false;
     }
 

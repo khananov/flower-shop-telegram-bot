@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.khananov.dispatchers.UpdateDispatcher;
 
 @Log4j2
@@ -18,7 +17,7 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
     @Autowired
     public TelegramBotConfig(@Value("${telegram-bot.name}") String botUsername,
                              @Value("${telegram-bot.token}") String botToken,
-                             UpdateDispatcher updateDispatcher) throws TelegramApiException {
+                             UpdateDispatcher updateDispatcher) {
         super(botToken);
         this.botUsername = botUsername;
         this.updateDispatcher = updateDispatcher;

@@ -19,8 +19,10 @@ public class CategoryController implements TelegramController {
     }
 
     @Override
-    public boolean support(String command) {
-        return (command.equals(CATALOG_COMMAND.getValue()));
+    public boolean support(Update update) {
+        if (!update.hasMessage()) return false;
+
+        return (update.getMessage().getText().equals(CATALOG_COMMAND.getValue()));
     }
 
     @Override

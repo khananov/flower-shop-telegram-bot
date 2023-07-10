@@ -8,15 +8,15 @@ public enum Command implements Serializable {
     CATALOG_COMMAND("\uD83D\uDCD6 Каталог"),
     PROFILE_COMMAND("\uD83D\uDC64 Профиль"),
 
-    WILD_FLOWERS_COMMAND("Полевые"),
-    GARDEN_FLOWERS_COMMAND("Садовые"),
+    WILD_FLOWERS_COMMAND("\uD83C\uDF38 Полевые"),
+    GARDEN_FLOWERS_COMMAND("\uD83C\uDF39 Садовые"),
 
     BUY_COMMAND("\uD83D\uDCB3 Купить"),
 
     NEXT_STEP_COMMAND("Дальше"),
     PREVIOUS_STEP_COMMAND("Назад"),
 
-    MAIN_MENU_COMMAND("Главная");
+    MAIN_MENU_COMMAND("\uD83D\uDEAA Главная");
 
     private final String value;
 
