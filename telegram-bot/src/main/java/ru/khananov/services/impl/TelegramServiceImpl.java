@@ -8,6 +8,8 @@ import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -25,6 +27,16 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
 
     @Override
     public void sendMessage(SendMessage message) {
+        if (message != null) {
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
+            }
+        }
+    }
+
+    public void sendEditMessage(EditMessageText message) {
         if (message != null) {
             try {
                 execute(message);
@@ -63,5 +75,16 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
         keyboardMarkupMessage.setText(text);
 
         sendMessage(keyboardMarkupMessage);
+    }
+
+    @Override
+    public void deleteMessage(DeleteMessage message) {
+        if (message != null) {
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                log.error(new SendMessageException("Failed delete message: " + e.getMessage()));
+            }
+        }
     }
 }

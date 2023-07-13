@@ -13,8 +13,13 @@ public enum Command implements Serializable {
 
     BUY_COMMAND("\uD83D\uDCB3 Купить"),
 
-    NEXT_STEP_COMMAND("Дальше"),
-    PREVIOUS_STEP_COMMAND("Назад"),
+    CREATE_ORDER_COMMAND("\u2705 Оформить заказ"),
+    CLEAR_ORDER_COMMAND("\u267B Отчистить корзину"),
+
+    PLUS_AMOUNT_COMMAND("\u2795"),
+    MINUS_AMOUNT_COMMAND("\u2796"),
+
+    REGISTRATION_COMMAND("\u270F Регистрация"),
 
     MAIN_MENU_COMMAND("\uD83D\uDEAA Главная");
 

@@ -3,18 +3,24 @@ package ru.khananov.services.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import ru.khananov.models.entities.TelegramUser;
 import ru.khananov.repositories.TelegramUserRepository;
+import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
 
 @Log4j2
 @Service
 public class TelegramUserServiceImpl implements TelegramUserService {
+    private final TelegramService telegramService;
     private final TelegramUserRepository telegramUserRepository;
 
     @Autowired
-    public TelegramUserServiceImpl(TelegramUserRepository telegramUserRepository) {
+    public TelegramUserServiceImpl(TelegramService telegramService,
+                                   TelegramUserRepository telegramUserRepository) {
+        this.telegramService = telegramService;
         this.telegramUserRepository = telegramUserRepository;
     }
 
@@ -32,6 +38,34 @@ public class TelegramUserServiceImpl implements TelegramUserService {
         } else {
             return setActive(telegramUser);
         }
+    }
+
+    @Override
+    public void sendProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup) {
+        telegramService.sendMessage(buildProfileMessage(chatId, keyboardMarkup,
+                telegramUserRepository.findByChatId(chatId)));
+    }
+
+    private SendMessage buildProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup,
+                                            TelegramUser user) {
+        String firstName = user.getFirstName() != null ? user.getFirstName() : "";
+        String lastName = user.getLastName() != null ? user.getLastName() : "";
+        String username = user.getUsername() != null ? user.getUsername() : "";
+        String address = user.getAddress() != null ? user.getAddress() : "";
+        String email = user.getEmail() != null ? user.getEmail() : "";
+
+        return SendMessage.builder()
+                .chatId(chatId)
+                .replyMarkup(keyboardMarkup)
+                .parseMode("Markdown")
+                .text("*= = = = = = = = = = = = = = = = =* \n" +
+                        "\n \u2139 *Информация о Вас:* \n" +
+                        "\n \uD83D\uDCAD *Имя:* " + firstName + " " + lastName +
+                        "\n \uD83D\uDD10 *Логин:* " + username +
+                        "\n \uD83C\uDF0F *Адрес:* " + address +
+                        "\n \uD83D\uDCEA *Email:* " + email + "\n" +
+                        "\n *= = = = = = = = = = = = = = = = =*")
+                .build();
     }
 
     private TelegramUser buildTelegramUser(Message message) {

@@ -32,7 +32,7 @@ public class CategoryController implements TelegramController {
 
     private void sendCategories(Update update) {
         telegramService.sendReplyKeyboard(
-                MyCategoriesMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
+                MyCategoriesMenuKeyboardMarkup.getCategoriesMenuReplyKeyboardMarkup(),
                 "Выберите категорию",
                 update.getMessage().getChatId());
     }

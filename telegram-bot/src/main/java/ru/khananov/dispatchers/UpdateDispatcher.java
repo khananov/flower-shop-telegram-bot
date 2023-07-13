@@ -19,18 +19,24 @@ public class UpdateDispatcher {
     private final CategoryController categoryController;
     private final CartController cartController;
     private final BuyController buyController;
+    private final ProductInOrderController productInOrderController;
+    private final ProfileController profileController;
 
     @Autowired
     public UpdateDispatcher(StartController startController,
                             CatalogController catalogController,
                             CategoryController categoryController,
                             CartController cartController,
-                            BuyController buyController) {
+                            BuyController buyController,
+                            ProductInOrderController productInOrderController,
+                            ProfileController profileController) {
         this.startController = startController;
         this.catalogController = catalogController;
         this.categoryController = categoryController;
         this.cartController = cartController;
         this.buyController = buyController;
+        this.productInOrderController = productInOrderController;
+        this.profileController = profileController;
     }
 
     private List<TelegramController> getControllers() {
@@ -39,7 +45,9 @@ public class UpdateDispatcher {
                 catalogController,
                 categoryController,
                 cartController,
-                buyController);
+                buyController,
+                productInOrderController,
+                profileController);
     }
 
     public void processUpdate(Update update) {

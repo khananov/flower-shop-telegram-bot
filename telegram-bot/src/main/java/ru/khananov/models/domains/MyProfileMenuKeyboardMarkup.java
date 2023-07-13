@@ -9,26 +9,23 @@ import java.util.Collections;
 import static org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton.builder;
 import static ru.khananov.models.domains.Command.*;
 
-public class MyCategoriesMenuKeyboardMarkup {
-    private static final ReplyKeyboardMarkup categoriesMenuReplyKeyboardMarkup = createCategoriesMenuKeyboard();
+public class MyProfileMenuKeyboardMarkup {
+    private static final ReplyKeyboardMarkup profileMenuReplyKeyboardMarkup = createProfileMenuKeyboard();
 
-    private MyCategoriesMenuKeyboardMarkup() {
+    private MyProfileMenuKeyboardMarkup() {
     }
 
-    public static ReplyKeyboardMarkup getCategoriesMenuReplyKeyboardMarkup() {
-        return categoriesMenuReplyKeyboardMarkup;
+    public static ReplyKeyboardMarkup getProfileMenuReplyKeyboardMarkup() {
+        return profileMenuReplyKeyboardMarkup;
     }
 
-    private static ReplyKeyboardMarkup createCategoriesMenuKeyboard() {
+    private static ReplyKeyboardMarkup createProfileMenuKeyboard() {
         ReplyKeyboardMarkup.ReplyKeyboardMarkupBuilder keyboardBuilder = ReplyKeyboardMarkup.builder();
         keyboardBuilder.resizeKeyboard(true);
         keyboardBuilder.selective(true);
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
-                builder().text(GARDEN_FLOWERS_COMMAND.getValue()).build(),
-                builder().text(WILD_FLOWERS_COMMAND.getValue()).build())));
-
-        keyboardBuilder.keyboardRow(new KeyboardRow(Collections.singletonList(
+                builder().text(REGISTRATION_COMMAND.getValue()).build(),
                 builder().text(MAIN_MENU_COMMAND.getValue()).build())));
 
         return keyboardBuilder.build();
