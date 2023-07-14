@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.controllers.impl.*;
 import ru.khananov.controllers.impl.registration.RegistrationAddressController;
+import ru.khananov.controllers.impl.registration.RegistrationController;
 import ru.khananov.controllers.impl.registration.RegistrationEmailController;
 import ru.khananov.controllers.impl.registration.RegistrationNameController;
 import ru.khananov.exceptions.UnsupportedMessageTypeException;

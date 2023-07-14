@@ -1,4 +1,4 @@
-package ru.khananov.controllers.impl;
+package ru.khananov.controllers.impl.registration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
