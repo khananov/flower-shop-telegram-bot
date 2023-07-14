@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.MyRegistrationInlineKeyboard;
+import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
 import ru.khananov.models.domains.registration.WaitingAddress;
 import ru.khananov.services.RegistrationService;
 import ru.khananov.services.TelegramService;
@@ -27,11 +27,13 @@ public class RegistrationAddressController implements TelegramController {
 
     @Override
     public boolean support(Update update) {
-        if (update.hasCallbackQuery())
-            return ((update.getCallbackQuery().getData().equals(CONFIRM_COMMAND.getValue()) ||
-                    update.getCallbackQuery().getData().equals(REJECT_COMMAND.getValue())));
-        if (update.hasMessage())
-            return (update.getMessage().hasText() && WaitingAddress.getInstance().getWaitingAddressText());
+        if (WaitingAddress.getInstance().getWaitingAddressText()) {
+            if (update.hasCallbackQuery())
+                return ((update.getCallbackQuery().getData().equals(CONFIRM_COMMAND.getValue()) ||
+                        update.getCallbackQuery().getData().equals(REJECT_COMMAND.getValue())));
+            if (update.hasMessage())
+                return (update.getMessage().hasText());
+        }
 
         return false;
     }
@@ -52,18 +54,17 @@ public class RegistrationAddressController implements TelegramController {
     }
 
     private void sendNextStep(Long chatId) {
+        WaitingAddress.getInstance().setWaitingAddressText(false);
         registrationService.sendEmailInlineKeyboard(chatId,
                 MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup());
     }
 
     private void waitingAddress(Long chatId) {
-        WaitingAddress.getInstance().setWaitingAddressText(true);
         telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваш адрес:"));
     }
 
     private void setAddress(Long chatId, String address) {
         registrationService.setAddress(chatId, address);
-        WaitingAddress.getInstance().setWaitingAddressText(false);
         sendNextStep(chatId);
     }
 }

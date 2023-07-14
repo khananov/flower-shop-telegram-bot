@@ -1,4 +1,4 @@
-package ru.khananov.models.domains;
+package ru.khananov.models.domains.inlinekeyboard;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

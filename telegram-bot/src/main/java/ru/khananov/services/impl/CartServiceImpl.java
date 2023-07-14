@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import ru.khananov.models.domains.MyProductInOrderInlineKeyboard;
+import ru.khananov.models.domains.inlinekeyboard.MyProductInOrderInlineKeyboard;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.ProductForCart;
 import ru.khananov.repositories.OrderRepository;

@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.MyRegistrationInlineKeyboard;
-import ru.khananov.models.domains.registration.WaitingName;
+import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
 import ru.khananov.services.RegistrationService;
-import ru.khananov.services.TelegramService;
 
 import static ru.khananov.models.domains.Command.REGISTRATION_COMMAND;
 

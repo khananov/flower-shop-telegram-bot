@@ -60,7 +60,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 .text("= = = = = = = = = = = = = = = = =\n" +
                         "\n \u2139 Информация о Вас: \n" +
                         "\n \uD83D\uDCAD Имя: " + firstName + " " + lastName +
-                        "\n \uD83D\uDD10 Логин: " + username +
+                        "\n \uD83D\uDD10 Username: " + username +
                         "\n \uD83C\uDF0F Адрес: " + address +
                         "\n \uD83D\uDCEA Email: " + email + "\n" +
                         "\n= = = = = = = = = = = = = = = = =")

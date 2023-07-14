@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.khananov.models.domains.MyRegistrationInlineKeyboard;
+import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
 import ru.khananov.models.domains.registration.WaitingAddress;
 import ru.khananov.models.domains.registration.WaitingEmail;
 import ru.khananov.models.domains.registration.WaitingName;
@@ -36,11 +36,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         TelegramUser user = telegramUserRepository.findByChatId(chatId);
         if (user.getFirstName() == null) {
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваше имя:"));
-            WaitingName.getInstance().setWaitingNameText(true);
         } else {
             telegramService.sendInlineKeyboard(MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup(),
                     "Ваше имя - " + user.getFirstName() + "?", chatId);
         }
+
+        WaitingName.getInstance().setWaitingNameText(true);
     }
 
     @Override
@@ -48,11 +49,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         TelegramUser user = telegramUserRepository.findByChatId(chatId);
         if (user.getAddress() == null) {
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваш адрес:"));
-            WaitingAddress.getInstance().setWaitingAddressText(true);
         } else {
             telegramService.sendInlineKeyboard(MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup(),
                     "Ваш адрес - " + user.getAddress() + "?", chatId);
         }
+
+        WaitingAddress.getInstance().setWaitingAddressText(true);
     }
 
     @Override
@@ -60,11 +62,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         TelegramUser user = telegramUserRepository.findByChatId(chatId);
         if (user.getEmail() == null) {
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваш email:"));
-            WaitingEmail.getInstance().setWaitingEmailText(true);
         } else {
             telegramService.sendInlineKeyboard(keyboardMarkup,
                     "Ваш email - " + user.getEmail() + "?", chatId);
         }
+
+        WaitingEmail.getInstance().setWaitingEmailText(true);
     }
 
     @Override
