@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.MyCategoriesMenuKeyboardMarkup;
-import ru.khananov.services.TelegramService;
+import ru.khananov.models.domains.menukeyboard.MyCategoriesMenuKeyboardMarkup;
+import ru.khananov.services.CategoryService;
 
 import static ru.khananov.models.domains.Command.*;
 
 @Controller
 public class CategoryController implements TelegramController {
-    private final TelegramService telegramService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(TelegramService telegramService) {
-        this.telegramService = telegramService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -27,13 +27,11 @@ public class CategoryController implements TelegramController {
 
     @Override
     public void execute(Update update) {
-        sendCategories(update);
+        sendCategories(update.getMessage().getChatId());
     }
 
-    private void sendCategories(Update update) {
-        telegramService.sendReplyKeyboard(
-                MyCategoriesMenuKeyboardMarkup.getCategoriesMenuReplyKeyboardMarkup(),
-                "Выберите категорию",
-                update.getMessage().getChatId());
+    private void sendCategories(Long chatId) {
+        categoryService.senCategories(chatId,
+                MyCategoriesMenuKeyboardMarkup.getCategoriesMenuReplyKeyboardMarkup());
     }
 }

@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import ru.khananov.models.domains.MyProductInOrderInlineKeyboard;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.ProductForCart;
+import ru.khananov.repositories.OrderRepository;
 import ru.khananov.repositories.ProductForCartRepository;
 import ru.khananov.services.CartService;
 import ru.khananov.services.OrderService;
@@ -20,21 +21,24 @@ import java.util.List;
 @Service
 public class CartServiceImpl implements CartService {
     private final ProductForCartRepository productForCartRepository;
+    private final OrderRepository orderRepository;
     private final OrderService orderService;
     private final TelegramService telegramService;
 
     @Autowired
     public CartServiceImpl(ProductForCartRepository productForCartRepository,
+                           OrderRepository orderRepository,
                            OrderService orderService,
                            TelegramService telegramService) {
         this.productForCartRepository = productForCartRepository;
+        this.orderRepository = orderRepository;
         this.orderService = orderService;
         this.telegramService = telegramService;
     }
 
     @Override
     public void sendProductsInOrder(Long chatId) {
-        Order order = orderService.findOrderByChatId(chatId);
+        Order order = orderService.findLastOrderByChatId(chatId);
         List<ProductForCart> products = productForCartRepository.findAllByOrderId(order.getId());
 
         products.forEach(product -> telegramService.sendInlineKeyboard(
@@ -61,10 +65,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void clearOrder(Long chatId) {
-        Order order = orderService.findOrderByChatId(chatId);
-        List<ProductForCart> products = productForCartRepository.findAllByOrderId(order.getId());
-
-        products.forEach(product -> productForCartRepository.deleteById(product.getId()));
+        Order order = orderService.findLastOrderByChatId(chatId);
+        orderRepository.delete(order);
     }
 
     private String calculateSum(ProductForCart product) {

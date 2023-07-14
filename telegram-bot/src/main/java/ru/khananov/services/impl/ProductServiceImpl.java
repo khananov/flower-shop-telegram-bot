@@ -41,14 +41,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void sendProductsByCategory(Update update) {
+    public void sendProductsByCategory(Long chatId, String text) {
         int skipEmojiIndex = 3;
-        String categoryName = update.getMessage().getText().substring(skipEmojiIndex);
+        String categoryName = text.substring(skipEmojiIndex);
         List<Product> products = findAllByCategoryName(categoryName);
 
         products.forEach(product -> telegramService.sendPhoto(new MyProductSendPhoto(
-                update.getMessage().getChatId(), product, findPriceProduct(product))
-                .getSendPhoto()));
+                chatId, product, findPriceProduct(product)).getSendPhoto()));
     }
 
     @Override

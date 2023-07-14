@@ -2,9 +2,10 @@ package ru.khananov.controllers.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.MyGeneralMenuKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
 
@@ -31,13 +32,13 @@ public class StartController implements TelegramController {
 
     @Override
     public void execute(Update update) {
-        startMessage(update);
+        startMessage(update.getMessage());
     }
 
-    private void startMessage(Update update) {
-        telegramUserService.registerUser(update.getMessage());
+    private void startMessage(Message message) {
+        telegramUserService.registerUser(message);
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
                 "Выберите действие",
-                update.getMessage().getChatId());
+                message.getChatId());
     }
 }

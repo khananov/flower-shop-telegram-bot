@@ -14,7 +14,6 @@ import static ru.khananov.models.domains.Command.BUY_COMMAND;
 public class MyProductSendPhoto {
     private final SendPhoto sendPhoto;
 
-
     public MyProductSendPhoto(Long chatId, Product product, String price) {
         sendPhoto = createPhoto(chatId, product, price);
     }

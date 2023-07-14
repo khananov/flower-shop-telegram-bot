@@ -1,6 +1,5 @@
 package ru.khananov.services;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.models.entities.Product;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public interface ProductService {
 
     String findPriceProduct(Product product);
 
-    void sendProductsByCategory(Update update);
+    void sendProductsByCategory(Long chatId, String text);
 
     Product findByName(String name);
 }

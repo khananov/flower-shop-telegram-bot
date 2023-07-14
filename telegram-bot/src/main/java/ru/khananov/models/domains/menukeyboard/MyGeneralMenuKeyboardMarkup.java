@@ -1,4 +1,4 @@
-package ru.khananov.models.domains;
+package ru.khananov.models.domains.menukeyboard;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;

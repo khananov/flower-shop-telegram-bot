@@ -57,14 +57,13 @@ public class TelegramUserServiceImpl implements TelegramUserService {
         return SendMessage.builder()
                 .chatId(chatId)
                 .replyMarkup(keyboardMarkup)
-                .parseMode("Markdown")
-                .text("*= = = = = = = = = = = = = = = = =* \n" +
-                        "\n \u2139 *Информация о Вас:* \n" +
-                        "\n \uD83D\uDCAD *Имя:* " + firstName + " " + lastName +
-                        "\n \uD83D\uDD10 *Логин:* " + username +
-                        "\n \uD83C\uDF0F *Адрес:* " + address +
-                        "\n \uD83D\uDCEA *Email:* " + email + "\n" +
-                        "\n *= = = = = = = = = = = = = = = = =*")
+                .text("= = = = = = = = = = = = = = = = =\n" +
+                        "\n \u2139 Информация о Вас: \n" +
+                        "\n \uD83D\uDCAD Имя: " + firstName + " " + lastName +
+                        "\n \uD83D\uDD10 Логин: " + username +
+                        "\n \uD83C\uDF0F Адрес: " + address +
+                        "\n \uD83D\uDCEA Email: " + email + "\n" +
+                        "\n= = = = = = = = = = = = = = = = =")
                 .build();
     }
 

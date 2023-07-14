@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.TelegramUser;
-import ru.khananov.models.enums.OrderStatus;
 import ru.khananov.repositories.OrderRepository;
 import ru.khananov.services.OrderService;
 import ru.khananov.services.TelegramUserService;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static ru.khananov.models.enums.OrderStatus.NEW;
 
 @Log4j2
 @Service
@@ -26,24 +28,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findOrderByChatId(Long chatId) {
+    public Order findLastOrderByChatId(Long chatId) {
         TelegramUser telegramUser = telegramUserService.findByChatId(chatId);
-        Order order;
+        List<Order> orders = orderRepository.findAllByTelegramUserId(telegramUser.getId());
+        Order lastOrder = orders.stream().filter(o -> o.getOrderStatus() == NEW).findFirst().orElse(null);
 
-        if (telegramUser.getOrder() == null)
-            order = createOrder(telegramUser);
-        else
-            order = orderRepository.findByTelegramUserId(telegramUser.getId());
+        if (lastOrder == null)
+            lastOrder = createOrder(telegramUser);
 
-        orderRepository.save(order);
+        orderRepository.save(lastOrder);
 
-        return order;
+        return lastOrder;
     }
 
     private Order createOrder(TelegramUser telegramUser) {
         return Order.builder()
                 .telegramUser(telegramUser)
-                .orderStatus(OrderStatus.NEW)
+                .orderStatus(NEW)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

@@ -27,6 +27,10 @@ public class CatalogController implements TelegramController {
 
     @Override
     public void execute(Update update) {
-        productService.sendProductsByCategory(update);
+        sendProductsByCategory(update.getMessage().getChatId(), update.getMessage().getText());
+    }
+
+    private void sendProductsByCategory(Long chatId, String categoryName) {
+        productService.sendProductsByCategory(chatId, categoryName);
     }
 }

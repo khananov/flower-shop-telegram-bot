@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.MyProfileMenuKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyProfileMenuKeyboardMarkup;
 import ru.khananov.services.TelegramUserService;
 
 import static ru.khananov.models.domains.Command.PROFILE_COMMAND;
@@ -27,8 +27,11 @@ public class ProfileController implements TelegramController {
 
     @Override
     public void execute(Update update) {
-        telegramUserService.sendProfileMessage(update.getMessage().getChatId(),
-                MyProfileMenuKeyboardMarkup.getProfileMenuReplyKeyboardMarkup());
+        sendUserProfile(update.getMessage().getChatId());
+    }
 
+    private void sendUserProfile(Long chatId) {
+        telegramUserService.sendProfileMessage(chatId,
+                MyProfileMenuKeyboardMarkup.getProfileMenuReplyKeyboardMarkup());
     }
 }

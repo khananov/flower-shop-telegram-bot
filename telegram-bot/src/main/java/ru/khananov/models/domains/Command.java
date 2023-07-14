@@ -21,6 +21,9 @@ public enum Command implements Serializable {
 
     REGISTRATION_COMMAND("\u270F Регистрация"),
 
+    CONFIRM_COMMAND("Да"),
+    REJECT_COMMAND("Нет"),
+
     MAIN_MENU_COMMAND("\uD83D\uDEAA Главная");
 
     private final String value;

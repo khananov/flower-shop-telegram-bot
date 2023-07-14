@@ -3,11 +3,10 @@ package ru.khananov.controllers.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.MyCartMenuKeyboardMarkup;
-import ru.khananov.models.domains.MyGeneralMenuKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyCartMenuKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.services.CartService;
 import ru.khananov.services.ProductForCartService;
 import ru.khananov.services.TelegramService;
@@ -41,27 +40,27 @@ public class CartController implements TelegramController {
     @Override
     public void execute(Update update) {
         if (update.getMessage().getText().equals(CART_COMMAND.getValue())) {
-            sendCart(update.getMessage());
-            sendProductsInOrder(update.getMessage());
+            sendCart(update.getMessage().getChatId());
+            sendProductsInOrder(update.getMessage().getChatId());
         } else if (update.getMessage().getText().equals(CLEAR_ORDER_COMMAND.getValue()))
-            clearOrder(update.getMessage());
+            clearOrder(update.getMessage().getChatId());
     }
 
-    private void sendCart(Message message) {
-        if (productForCartService.findAllByChatId(message.getChatId()).isEmpty())
-            telegramService.sendMessage(new SendMessage(message.getChatId().toString(), "Корзина пуста"));
+    private void sendCart(Long chatId) {
+        if (productForCartService.findAllByChatId(chatId).isEmpty())
+            telegramService.sendMessage(new SendMessage(chatId.toString(), "Корзина пуста"));
         else
             telegramService.sendReplyKeyboard(MyCartMenuKeyboardMarkup.getCartReplyKeyboardMarkup(),
-                "Ваш заказ:", message.getChatId());
+                "Ваш заказ:", chatId);
     }
 
-    private void sendProductsInOrder(Message message) {
-        cartService.sendProductsInOrder(message.getChatId());
+    private void sendProductsInOrder(Long chatId) {
+        cartService.sendProductsInOrder(chatId);
     }
 
-    private void clearOrder(Message message) {
-        cartService.clearOrder(message.getChatId());
+    private void clearOrder(Long chatId) {
+        cartService.clearOrder(chatId);
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
-                "Корзина очищена", message.getChatId());
+                "Корзина очищена", chatId);
     }
 }

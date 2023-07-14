@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.controllers.impl.*;
+import ru.khananov.controllers.impl.registration.RegistrationAddressController;
+import ru.khananov.controllers.impl.registration.RegistrationEmailController;
+import ru.khananov.controllers.impl.registration.RegistrationNameController;
 import ru.khananov.exceptions.UnsupportedMessageTypeException;
 
 import java.util.Arrays;
@@ -21,6 +24,10 @@ public class UpdateDispatcher {
     private final BuyController buyController;
     private final ProductInOrderController productInOrderController;
     private final ProfileController profileController;
+    private final RegistrationController registrationController;
+    private final RegistrationNameController registrationNameController;
+    private final RegistrationAddressController registrationAddressController;
+    private final RegistrationEmailController registrationEmailController;
 
     @Autowired
     public UpdateDispatcher(StartController startController,
@@ -29,7 +36,11 @@ public class UpdateDispatcher {
                             CartController cartController,
                             BuyController buyController,
                             ProductInOrderController productInOrderController,
-                            ProfileController profileController) {
+                            ProfileController profileController,
+                            RegistrationController registrationController,
+                            RegistrationNameController registrationNameController,
+                            RegistrationAddressController registrationAddressController,
+                            RegistrationEmailController registrationEmailController) {
         this.startController = startController;
         this.catalogController = catalogController;
         this.categoryController = categoryController;
@@ -37,6 +48,10 @@ public class UpdateDispatcher {
         this.buyController = buyController;
         this.productInOrderController = productInOrderController;
         this.profileController = profileController;
+        this.registrationController = registrationController;
+        this.registrationNameController = registrationNameController;
+        this.registrationAddressController = registrationAddressController;
+        this.registrationEmailController = registrationEmailController;
     }
 
     private List<TelegramController> getControllers() {
@@ -47,7 +62,11 @@ public class UpdateDispatcher {
                 cartController,
                 buyController,
                 productInOrderController,
-                profileController);
+                profileController,
+                registrationController,
+                registrationNameController,
+                registrationAddressController,
+                registrationEmailController);
     }
 
     public void processUpdate(Update update) {
