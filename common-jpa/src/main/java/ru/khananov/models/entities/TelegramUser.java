@@ -1,6 +1,7 @@
 package ru.khananov.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.io.Serial;
@@ -38,6 +39,7 @@ public class TelegramUser implements Serializable {
 
     @Column
     private String username;
+
 
     @Column
     private String email;

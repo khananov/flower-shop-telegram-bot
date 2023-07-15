@@ -24,6 +24,8 @@ public enum Command implements Serializable {
     CHANGE_PROFILE_COMMAND("\uD83D\uDCDD Изменить информацию"),
     DELETE_PROFILE_COMMAND("\u274C Удалить профиль"),
 
+    GET_ORDERS_COMMAND("\u274C Список заказов"),
+
     CONFIRM_COMMAND("Да"),
     REJECT_COMMAND("Нет"),
 

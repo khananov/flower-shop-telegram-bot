@@ -63,8 +63,7 @@ public class ProfileController implements TelegramController {
     }
 
     private void verifyEmail(Long chatId) {
-        registrationService.sendNameInlineKeyboard(chatId,
-                MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup());
+
     }
 
     private void changeProfile(Long chatId) {
