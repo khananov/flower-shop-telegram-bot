@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.controllers.impl.*;
 import ru.khananov.controllers.impl.registration.RegistrationAddressController;
-import ru.khananov.controllers.impl.registration.RegistrationController;
 import ru.khananov.controllers.impl.registration.RegistrationEmailController;
 import ru.khananov.controllers.impl.registration.RegistrationNameController;
 import ru.khananov.exceptions.UnsupportedMessageTypeException;
@@ -25,7 +24,6 @@ public class UpdateDispatcher {
     private final BuyController buyController;
     private final ProductInOrderController productInOrderController;
     private final ProfileController profileController;
-    private final RegistrationController registrationController;
     private final RegistrationNameController registrationNameController;
     private final RegistrationAddressController registrationAddressController;
     private final RegistrationEmailController registrationEmailController;
@@ -38,7 +36,6 @@ public class UpdateDispatcher {
                             BuyController buyController,
                             ProductInOrderController productInOrderController,
                             ProfileController profileController,
-                            RegistrationController registrationController,
                             RegistrationNameController registrationNameController,
                             RegistrationAddressController registrationAddressController,
                             RegistrationEmailController registrationEmailController) {
@@ -49,7 +46,6 @@ public class UpdateDispatcher {
         this.buyController = buyController;
         this.productInOrderController = productInOrderController;
         this.profileController = profileController;
-        this.registrationController = registrationController;
         this.registrationNameController = registrationNameController;
         this.registrationAddressController = registrationAddressController;
         this.registrationEmailController = registrationEmailController;
@@ -64,7 +60,6 @@ public class UpdateDispatcher {
                 buyController,
                 productInOrderController,
                 profileController,
-                registrationController,
                 registrationNameController,
                 registrationAddressController,
                 registrationEmailController);

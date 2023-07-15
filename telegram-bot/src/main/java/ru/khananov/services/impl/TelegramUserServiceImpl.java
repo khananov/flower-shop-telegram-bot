@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyChangeProfileMenuKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyRegistrationProfileMenuKeyboardMarkup;
 import ru.khananov.models.entities.TelegramUser;
 import ru.khananov.repositories.TelegramUserRepository;
 import ru.khananov.services.TelegramService;
@@ -41,9 +43,22 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     }
 
     @Override
-    public void sendProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup) {
-        telegramService.sendMessage(buildProfileMessage(chatId, keyboardMarkup,
-                telegramUserRepository.findByChatId(chatId)));
+    public void sendProfileMessage(Long chatId) {
+        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        if (user.getEmail() == null)
+            telegramService.sendMessage(buildProfileMessage(chatId,
+                    MyRegistrationProfileMenuKeyboardMarkup.getProfileMenuReplyKeyboardMarkup(),
+                    user));
+        else
+            telegramService.sendMessage(buildProfileMessage(chatId,
+                    MyChangeProfileMenuKeyboardMarkup.getChangeProfileMenuReplyKeyboardMarkup(),
+                    user));
+    }
+
+    @Override
+    public void deleteProfile(Long chatId) {
+        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        telegramUserRepository.delete(user);
     }
 
     private SendMessage buildProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup,

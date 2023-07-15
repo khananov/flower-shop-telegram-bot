@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
+import ru.khananov.models.domains.menukeyboard.MyChangeProfileMenuKeyboardMarkup;
 import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.models.domains.registration.WaitingEmail;
 import ru.khananov.services.RegistrationService;
@@ -54,8 +55,8 @@ public class RegistrationEmailController implements TelegramController {
 
     private void sendNextStep(Long chatId) {
         WaitingEmail.getInstance().setWaitingEmailText(false);
-        telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
-                "Вы зарегистрировались!", chatId);
+        telegramService.sendReplyKeyboard(MyChangeProfileMenuKeyboardMarkup.getChangeProfileMenuReplyKeyboardMarkup(),
+                "Информация успешно сохранена!", chatId);
     }
 
     private void waitingEmail(Long chatId) {

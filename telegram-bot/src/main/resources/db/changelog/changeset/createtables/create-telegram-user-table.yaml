@@ -39,3 +39,6 @@ databaseChangeLog:
               - column:
                   name: is_active
                   type: boolean
+              - column:
+                  name: is_registered
+                  type: boolean

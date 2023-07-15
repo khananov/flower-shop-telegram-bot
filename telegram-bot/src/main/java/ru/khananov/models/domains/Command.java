@@ -20,6 +20,9 @@ public enum Command implements Serializable {
     MINUS_AMOUNT_COMMAND("\u2796"),
 
     REGISTRATION_COMMAND("\u270F Регистрация"),
+    VERIFY_EMAIL_COMMAND("\u2705 Подтвердить email"),
+    CHANGE_PROFILE_COMMAND("\uD83D\uDCDD Изменить информацию"),
+    DELETE_PROFILE_COMMAND("\u274C Удалить профиль"),
 
     CONFIRM_COMMAND("Да"),
     REJECT_COMMAND("Нет"),

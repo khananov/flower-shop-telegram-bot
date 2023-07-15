@@ -8,10 +8,10 @@ import java.util.Arrays;
 import static org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton.builder;
 import static ru.khananov.models.domains.Command.*;
 
-public class MyProfileMenuKeyboardMarkup {
+public class MyRegistrationProfileMenuKeyboardMarkup {
     private static final ReplyKeyboardMarkup profileMenuReplyKeyboardMarkup = createProfileMenuKeyboard();
 
-    private MyProfileMenuKeyboardMarkup() {
+    private MyRegistrationProfileMenuKeyboardMarkup() {
     }
 
     public static ReplyKeyboardMarkup getProfileMenuReplyKeyboardMarkup() {
