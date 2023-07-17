@@ -10,6 +10,7 @@ import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.services.RegistrationService;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
+import ru.khananov.services.rabbitservices.TelegramProducerService;
 
 import static ru.khananov.models.domains.Command.*;
 
@@ -18,14 +19,17 @@ public class ProfileController implements TelegramController {
     private final TelegramUserService telegramUserService;
     private final RegistrationService registrationService;
     private final TelegramService telegramService;
+    private final TelegramProducerService telegramProducerService;
 
     @Autowired
     public ProfileController(TelegramUserService telegramUserService,
                              RegistrationService registrationService,
-                             TelegramService telegramService) {
+                             TelegramService telegramService,
+                             TelegramProducerService telegramProducerService) {
         this.telegramUserService = telegramUserService;
         this.registrationService = registrationService;
         this.telegramService = telegramService;
+        this.telegramProducerService = telegramProducerService;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class ProfileController implements TelegramController {
     }
 
     private void verifyEmail(Long chatId) {
-
+        telegramProducerService.produce("MAIL_VERIFICATION_QUEUE", chatId, "novakzuzana079@gmail.com");
     }
 
     private void changeProfile(Long chatId) {

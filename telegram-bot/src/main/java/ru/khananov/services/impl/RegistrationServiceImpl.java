@@ -88,6 +88,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public void setEmail(Long chatId, String email) {
         TelegramUser user = telegramUserService.findByChatId(chatId);
         user.setEmail(email);
+        user.setIsRegistered(true);
         telegramUserRepository.save(user);
     }
 }

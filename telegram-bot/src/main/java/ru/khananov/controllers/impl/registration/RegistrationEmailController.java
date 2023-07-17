@@ -6,10 +6,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.models.domains.menukeyboard.MyChangeProfileMenuKeyboardMarkup;
-import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.models.domains.registration.WaitingEmail;
 import ru.khananov.services.RegistrationService;
 import ru.khananov.services.TelegramService;
+import ru.khananov.services.rabbitservices.TelegramProducerService;
 
 import static ru.khananov.models.domains.Command.*;
 
@@ -20,7 +20,7 @@ public class RegistrationEmailController implements TelegramController {
 
     @Autowired
     public RegistrationEmailController(RegistrationService registrationService,
-                                         TelegramService telegramService) {
+                                       TelegramService telegramService) {
         this.registrationService = registrationService;
         this.telegramService = telegramService;
     }

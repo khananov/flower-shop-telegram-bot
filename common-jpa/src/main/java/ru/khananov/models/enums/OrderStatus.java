@@ -7,7 +7,7 @@ public enum OrderStatus implements Serializable {
     NEW("New"),
     PAID("Paid"),
     CANCELED("Canceled"),
-    CLOSED("Closed");
+    DELIVERED("Delivered");
 
     private final String value;
 

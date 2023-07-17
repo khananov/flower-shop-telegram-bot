@@ -45,13 +45,13 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     @Override
     public void sendProfileMessage(Long chatId) {
         TelegramUser user = telegramUserRepository.findByChatId(chatId);
-        if (user.getEmail() == null)
+        if (user.getIsRegistered())
             telegramService.sendMessage(buildProfileMessage(chatId,
-                    MyRegistrationProfileMenuKeyboardMarkup.getProfileMenuReplyKeyboardMarkup(),
+                    MyChangeProfileMenuKeyboardMarkup.getChangeProfileMenuReplyKeyboardMarkup(),
                     user));
         else
             telegramService.sendMessage(buildProfileMessage(chatId,
-                    MyChangeProfileMenuKeyboardMarkup.getChangeProfileMenuReplyKeyboardMarkup(),
+                    MyRegistrationProfileMenuKeyboardMarkup.getProfileMenuReplyKeyboardMarkup(),
                     user));
     }
 
@@ -88,6 +88,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 firstName(message.getChat().getFirstName()).
                 lastName(message.getChat().getLastName()).
                 username(message.getChat().getUserName()).
+                isRegistered(false).
                 isActive(true).build();
     }
 

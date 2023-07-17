@@ -14,7 +14,7 @@ public class CryptoTool {
         return hashids.encode(value);
     }
 
-    public Long idOf(String value) {
+    public Long valueOf(String value) {
         long[] result = hashids.decode(value);
         if (result != null && result.length > 0)
             return result[0];

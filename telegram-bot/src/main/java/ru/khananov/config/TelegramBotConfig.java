@@ -1,35 +1,27 @@
 package ru.khananov.config;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.khananov.dispatchers.UpdateDispatcher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import ru.khananov.utils.CryptoTool;
 
-@Log4j2
-@Component
-public class TelegramBotConfig extends TelegramLongPollingBot {
-    private final UpdateDispatcher updateDispatcher;
-    private final String botUsername;
+@Configuration
+public class TelegramBotConfig {
+    @Value("${salt}")
+    private String salt;
 
-    @Autowired
-    public TelegramBotConfig(@Value("${telegram-bot.name}") String botUsername,
-                             @Value("${telegram-bot.token}") String botToken,
-                             UpdateDispatcher updateDispatcher) {
-        super(botToken);
-        this.botUsername = botUsername;
-        this.updateDispatcher = updateDispatcher;
+    @Bean
+    public TelegramBotsApi telegramBotsApi(TelegramPolling telegramPolling) throws TelegramApiException {
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+        telegramBotsApi.registerBot(telegramPolling);
+        return telegramBotsApi;
     }
 
-    @Override
-    public void onUpdateReceived(Update update) {
-        updateDispatcher.processUpdate(update);
-    }
-
-    @Override
-    public String getBotUsername() {
-        return botUsername;
+    @Bean
+    public CryptoTool getCryptoTool() {
+        return new CryptoTool(salt);
     }
 }
