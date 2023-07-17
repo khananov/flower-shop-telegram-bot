@@ -19,9 +19,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: phone_number
-                  type: varchar (20)
-              - column:
                   name: first_name
                   type: varchar
               - column:
@@ -37,8 +34,5 @@ databaseChangeLog:
                   name: address
                   type: varchar
               - column:
-                  name: is_active
-                  type: boolean
-              - column:
-                  name: is_registered
-                  type: boolean
+                  name: user_status
+                  type: varchar

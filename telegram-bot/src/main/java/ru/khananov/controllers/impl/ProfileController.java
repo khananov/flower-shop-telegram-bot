@@ -2,17 +2,21 @@ package ru.khananov.controllers.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
+import ru.khananov.models.domains.TemporalCodeCache;
 import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
 import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
+import ru.khananov.models.domains.menukeyboard.MyVerifyCodeMenuKeyboardMarkup;
 import ru.khananov.services.RegistrationService;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
 import ru.khananov.services.rabbitservices.TelegramProducerService;
 
 import static ru.khananov.models.domains.Command.*;
+import static ru.khananov.models.enums.UserStatus.REGISTERED;
 
 @Controller
 public class ProfileController implements TelegramController {
@@ -39,8 +43,7 @@ public class ProfileController implements TelegramController {
         return (update.getMessage().getText().equals(PROFILE_COMMAND.getValue()) ||
                 update.getMessage().getText().equals(REGISTRATION_COMMAND.getValue()) ||
                 update.getMessage().getText().equals(VERIFY_EMAIL_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(CHANGE_PROFILE_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(DELETE_PROFILE_COMMAND.getValue()));
+                update.getMessage().getText().equals(CHANGE_PROFILE_COMMAND.getValue()));
     }
 
     @Override
@@ -67,7 +70,13 @@ public class ProfileController implements TelegramController {
     }
 
     private void verifyEmail(Long chatId) {
-        telegramProducerService.produce("MAIL_VERIFICATION_QUEUE", chatId, "novakzuzana079@gmail.com");
+        TemporalCodeCache.getInstance().deleteCodeByChatId(chatId);
+
+        registrationService.sendCodeInlineKeyboard(chatId,
+                MyVerifyCodeMenuKeyboardMarkup.getVerifyCodeMenuReplyKeyboardMarkup());
+        telegramProducerService.produce(
+                "MAIL_VERIFICATION_QUEUE", chatId,
+                telegramUserService.getUserEmailByChatId(chatId));
     }
 
     private void changeProfile(Long chatId) {
@@ -76,7 +85,7 @@ public class ProfileController implements TelegramController {
 
     private void deleteProfile(Message message) {
         telegramUserService.deleteProfile(message.getChatId());
-        telegramUserService.registerUser(message);
+        telegramUserService.saveNewUser(message);
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
                 "Информация удалена",
                 message.getChatId());

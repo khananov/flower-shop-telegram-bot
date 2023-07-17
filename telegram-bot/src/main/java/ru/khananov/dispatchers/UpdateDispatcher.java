@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.controllers.impl.*;
 import ru.khananov.controllers.impl.registration.RegistrationAddressController;
+import ru.khananov.controllers.impl.registration.RegistrationCodeController;
 import ru.khananov.controllers.impl.registration.RegistrationEmailController;
 import ru.khananov.controllers.impl.registration.RegistrationNameController;
 import ru.khananov.exceptions.UnsupportedMessageTypeException;
@@ -27,6 +28,7 @@ public class UpdateDispatcher {
     private final RegistrationNameController registrationNameController;
     private final RegistrationAddressController registrationAddressController;
     private final RegistrationEmailController registrationEmailController;
+    private final RegistrationCodeController registrationCodeController;
 
     @Autowired
     public UpdateDispatcher(StartController startController,
@@ -38,7 +40,8 @@ public class UpdateDispatcher {
                             ProfileController profileController,
                             RegistrationNameController registrationNameController,
                             RegistrationAddressController registrationAddressController,
-                            RegistrationEmailController registrationEmailController) {
+                            RegistrationEmailController registrationEmailController,
+                            RegistrationCodeController registrationCodeController) {
         this.startController = startController;
         this.catalogController = catalogController;
         this.categoryController = categoryController;
@@ -49,6 +52,7 @@ public class UpdateDispatcher {
         this.registrationNameController = registrationNameController;
         this.registrationAddressController = registrationAddressController;
         this.registrationEmailController = registrationEmailController;
+        this.registrationCodeController = registrationCodeController;
     }
 
     private List<TelegramController> getControllers() {
@@ -62,7 +66,8 @@ public class UpdateDispatcher {
                 profileController,
                 registrationNameController,
                 registrationAddressController,
-                registrationEmailController);
+                registrationEmailController,
+                registrationCodeController);
     }
 
     public void processUpdate(Update update) {

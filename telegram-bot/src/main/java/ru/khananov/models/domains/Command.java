@@ -21,6 +21,7 @@ public enum Command implements Serializable {
 
     REGISTRATION_COMMAND("\u270F Регистрация"),
     VERIFY_EMAIL_COMMAND("\u2705 Подтвердить email"),
+    CANCEL_CODE_COMMAND("\uD83D\uDEAB Отмена"),
     CHANGE_PROFILE_COMMAND("\uD83D\uDCDD Изменить информацию"),
     DELETE_PROFILE_COMMAND("\u274C Удалить профиль"),
 

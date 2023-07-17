@@ -1,6 +1,7 @@
 package ru.khananov.services;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 public interface RegistrationService {
     void sendNameInlineKeyboard(Long chatId, InlineKeyboardMarkup keyboardMarkup);
@@ -9,9 +10,9 @@ public interface RegistrationService {
 
     void sendEmailInlineKeyboard(Long chatId, InlineKeyboardMarkup keyboardMarkup);
 
-    void setName(Long chatId, String name);
+    void sendCodeInlineKeyboard(Long chatId, ReplyKeyboardMarkup keyboardMarkup);
 
-    void setAddress(Long chatId, String address);
+    void setUserInfo(Long chatId, String info);
 
-    void setEmail(Long chatId, String email);
+    void codeCheck(Long chatId, String inputCode);
 }

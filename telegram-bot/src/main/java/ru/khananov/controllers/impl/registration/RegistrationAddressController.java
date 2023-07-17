@@ -6,34 +6,38 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
-import ru.khananov.models.domains.registration.WaitingAddress;
 import ru.khananov.services.RegistrationService;
 import ru.khananov.services.TelegramService;
+import ru.khananov.services.TelegramUserService;
 
 import static ru.khananov.models.domains.Command.CONFIRM_COMMAND;
 import static ru.khananov.models.domains.Command.REJECT_COMMAND;
+import static ru.khananov.models.enums.UserStatus.WAITING_ADDRESS_INPUT;
+import static ru.khananov.models.enums.UserStatus.WAITING_NAME_INPUT;
 
 @Controller
 public class RegistrationAddressController implements TelegramController {
     private final RegistrationService registrationService;
     private final TelegramService telegramService;
+    private final TelegramUserService telegramUserService;
 
     @Autowired
     public RegistrationAddressController(RegistrationService registrationService,
-                                         TelegramService telegramService) {
+                                         TelegramService telegramService,
+                                         TelegramUserService telegramUserService) {
         this.registrationService = registrationService;
         this.telegramService = telegramService;
+        this.telegramUserService = telegramUserService;
     }
 
     @Override
     public boolean support(Update update) {
-        if (WaitingAddress.getInstance().getWaitingAddressText()) {
-            if (update.hasCallbackQuery())
-                return ((update.getCallbackQuery().getData().equals(CONFIRM_COMMAND.getValue()) ||
-                        update.getCallbackQuery().getData().equals(REJECT_COMMAND.getValue())));
-            if (update.hasMessage())
-                return (update.getMessage().hasText());
-        }
+        if (update.hasCallbackQuery())
+            return telegramUserService.getUserStatusByChatId(update.getCallbackQuery().getMessage().getChatId())
+                    .equals(WAITING_ADDRESS_INPUT);
+        if (update.hasMessage() && update.getMessage().hasText())
+            return telegramUserService.getUserStatusByChatId(update.getMessage().getChatId())
+                    .equals(WAITING_ADDRESS_INPUT);
 
         return false;
     }
@@ -48,13 +52,12 @@ public class RegistrationAddressController implements TelegramController {
                 update.getCallbackQuery().getData().equals(REJECT_COMMAND.getValue())) {
             waitingAddress(update.getCallbackQuery().getMessage().getChatId());
         }
-        else if (update.hasMessage() && update.getMessage().hasText()) {
+        else if (update.hasMessage()) {
             setAddress(update.getMessage().getChatId(), update.getMessage().getText());
         }
     }
 
     private void sendNextStep(Long chatId) {
-        WaitingAddress.getInstance().setWaitingAddressText(false);
         registrationService.sendEmailInlineKeyboard(chatId,
                 MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup());
     }
@@ -64,7 +67,7 @@ public class RegistrationAddressController implements TelegramController {
     }
 
     private void setAddress(Long chatId, String address) {
-        registrationService.setAddress(chatId, address);
+        registrationService.setUserInfo(chatId, address);
         sendNextStep(chatId);
     }
 }

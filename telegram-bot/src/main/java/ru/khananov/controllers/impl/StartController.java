@@ -36,7 +36,7 @@ public class StartController implements TelegramController {
     }
 
     private void startMessage(Message message) {
-        telegramUserService.registerUser(message);
+        telegramUserService.saveNewUser(message);
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
                 "Выберите действие",
                 message.getChatId());

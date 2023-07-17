@@ -3,6 +3,7 @@ package ru.khananov.models.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import ru.khananov.models.enums.UserStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -28,9 +29,6 @@ public class TelegramUser implements Serializable {
     @Column(name = "chat_id")
     private Long chatId;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
     @Column(name = "first_name")
     private String firstName;
 
@@ -47,11 +45,9 @@ public class TelegramUser implements Serializable {
     @Column
     private String address;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
-
-    @Column(name = "is_registered")
-    private Boolean isRegistered;
+    @Column(name = "user_status")
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 
     @OneToMany(mappedBy = "telegramUser", fetch = FetchType.EAGER)
     private List<Order> orders;

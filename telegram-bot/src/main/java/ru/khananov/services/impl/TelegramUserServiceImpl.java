@@ -9,9 +9,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import ru.khananov.models.domains.menukeyboard.MyChangeProfileMenuKeyboardMarkup;
 import ru.khananov.models.domains.menukeyboard.MyRegistrationProfileMenuKeyboardMarkup;
 import ru.khananov.models.entities.TelegramUser;
+import ru.khananov.models.enums.UserStatus;
 import ru.khananov.repositories.TelegramUserRepository;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
+
+import static ru.khananov.models.enums.UserStatus.*;
 
 @Log4j2
 @Service
@@ -32,20 +35,17 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     }
 
     @Override
-    public TelegramUser registerUser(Message message) {
+    public void saveNewUser(Message message) {
         TelegramUser telegramUser = findByChatId(message.getChatId());
 
-        if (telegramUser == null) {
-            return telegramUserRepository.save(buildTelegramUser(message));
-        } else {
-            return setActive(telegramUser);
-        }
+        if (telegramUser == null)
+            telegramUserRepository.save(buildTelegramUser(message));
     }
 
     @Override
     public void sendProfileMessage(Long chatId) {
         TelegramUser user = telegramUserRepository.findByChatId(chatId);
-        if (user.getIsRegistered())
+        if (user.getUserStatus().equals(REGISTERED) || user.getUserStatus().equals(CONFIRMED))
             telegramService.sendMessage(buildProfileMessage(chatId,
                     MyChangeProfileMenuKeyboardMarkup.getChangeProfileMenuReplyKeyboardMarkup(),
                     user));
@@ -59,6 +59,27 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     public void deleteProfile(Long chatId) {
         TelegramUser user = telegramUserRepository.findByChatId(chatId);
         telegramUserRepository.delete(user);
+    }
+
+    @Override
+    public UserStatus getUserStatusByChatId(Long chatId) {
+        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        return user.getUserStatus();
+    }
+
+    @Override
+    public void updateUserStatus(Long chatId, UserStatus status) {
+        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        user.setUserStatus(status);
+        telegramUserRepository.save(user);
+    }
+
+    @Override
+    public String getUserEmailByChatId(Long chatId) {
+        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        if (user != null)
+            return user.getEmail();
+        return null;
     }
 
     private SendMessage buildProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup,
@@ -88,12 +109,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 firstName(message.getChat().getFirstName()).
                 lastName(message.getChat().getLastName()).
                 username(message.getChat().getUserName()).
-                isRegistered(false).
-                isActive(true).build();
-    }
-
-    private TelegramUser setActive(TelegramUser telegramUser) {
-        telegramUser.setIsActive(true);
-        return telegramUserRepository.save(telegramUser);
+                userStatus(NEW).
+                build();
     }
 }
