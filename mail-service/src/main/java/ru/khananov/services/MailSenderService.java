@@ -1,7 +1,7 @@
 package ru.khananov.services;
 
-import ru.khananov.dto.MailParams;
+import ru.khananov.dto.MailParamsDto;
 
 public interface MailSenderService {
-    void send(MailParams mailParams);
+    void send(MailParamsDto mailParamsDto);
 }

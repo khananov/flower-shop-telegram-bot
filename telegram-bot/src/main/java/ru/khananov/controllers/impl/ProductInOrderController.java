@@ -22,10 +22,12 @@ public class ProductInOrderController implements TelegramController {
 
     @Override
     public boolean support(Update update) {
-        if (!update.hasCallbackQuery()) return false;
+        if (update.hasCallbackQuery()) {
+            return (update.getCallbackQuery().getData().equals(MINUS_AMOUNT_COMMAND.getValue()) ||
+                    update.getCallbackQuery().getData().equals(PLUS_AMOUNT_COMMAND.getValue()));
+        }
 
-        return (update.getCallbackQuery().getData().equals(MINUS_AMOUNT_COMMAND.getValue()) ||
-                update.getCallbackQuery().getData().equals(PLUS_AMOUNT_COMMAND.getValue()));
+        return false;
     }
 
     @Override

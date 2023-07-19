@@ -2,11 +2,9 @@ package ru.khananov.controllers.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
-import ru.khananov.models.domains.TemporalCodeCache;
 import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
 import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.models.domains.menukeyboard.MyVerifyCodeMenuKeyboardMarkup;
@@ -16,34 +14,33 @@ import ru.khananov.services.TelegramUserService;
 import ru.khananov.services.rabbitservices.TelegramProducerService;
 
 import static ru.khananov.models.domains.Command.*;
-import static ru.khananov.models.enums.UserStatus.REGISTERED;
 
 @Controller
 public class ProfileController implements TelegramController {
     private final TelegramUserService telegramUserService;
     private final RegistrationService registrationService;
     private final TelegramService telegramService;
-    private final TelegramProducerService telegramProducerService;
 
     @Autowired
     public ProfileController(TelegramUserService telegramUserService,
                              RegistrationService registrationService,
-                             TelegramService telegramService,
-                             TelegramProducerService telegramProducerService) {
+                             TelegramService telegramService) {
         this.telegramUserService = telegramUserService;
         this.registrationService = registrationService;
         this.telegramService = telegramService;
-        this.telegramProducerService = telegramProducerService;
     }
 
     @Override
     public boolean support(Update update) {
-        if (!update.hasMessage()) return false;
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            return (update.getMessage().getText().equals(PROFILE_COMMAND.getValue()) ||
+                    update.getMessage().getText().equals(REGISTRATION_COMMAND.getValue()) ||
+                    update.getMessage().getText().equals(VERIFY_EMAIL_COMMAND.getValue()) ||
+                    update.getMessage().getText().equals(DELETE_PROFILE_COMMAND.getValue()) ||
+                    update.getMessage().getText().equals(CHANGE_PROFILE_COMMAND.getValue()));
+        }
 
-        return (update.getMessage().getText().equals(PROFILE_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(REGISTRATION_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(VERIFY_EMAIL_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(CHANGE_PROFILE_COMMAND.getValue()));
+        return false;
     }
 
     @Override
@@ -70,13 +67,8 @@ public class ProfileController implements TelegramController {
     }
 
     private void verifyEmail(Long chatId) {
-        TemporalCodeCache.getInstance().deleteCodeByChatId(chatId);
-
         registrationService.sendCodeInlineKeyboard(chatId,
                 MyVerifyCodeMenuKeyboardMarkup.getVerifyCodeMenuReplyKeyboardMarkup());
-        telegramProducerService.produce(
-                "MAIL_VERIFICATION_QUEUE", chatId,
-                telegramUserService.getUserEmailByChatId(chatId));
     }
 
     private void changeProfile(Long chatId) {

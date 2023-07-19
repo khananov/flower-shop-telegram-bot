@@ -6,13 +6,17 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import ru.khananov.dto.MailParamsDto;
+import ru.khananov.dto.PurchaseParamsDto;
 import ru.khananov.models.domains.menukeyboard.MyChangeProfileMenuKeyboardMarkup;
 import ru.khananov.models.domains.menukeyboard.MyRegistrationProfileMenuKeyboardMarkup;
+import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.TelegramUser;
 import ru.khananov.models.enums.UserStatus;
 import ru.khananov.repositories.TelegramUserRepository;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
+import ru.khananov.utils.CryptoTool;
 
 import static ru.khananov.models.enums.UserStatus.*;
 
@@ -21,12 +25,15 @@ import static ru.khananov.models.enums.UserStatus.*;
 public class TelegramUserServiceImpl implements TelegramUserService {
     private final TelegramService telegramService;
     private final TelegramUserRepository telegramUserRepository;
+    private final CryptoTool cryptoTool;
 
     @Autowired
     public TelegramUserServiceImpl(TelegramService telegramService,
-                                   TelegramUserRepository telegramUserRepository) {
+                                   TelegramUserRepository telegramUserRepository,
+                                   CryptoTool cryptoTool) {
         this.telegramService = telegramService;
         this.telegramUserRepository = telegramUserRepository;
+        this.cryptoTool = cryptoTool;
     }
 
     @Override
@@ -111,5 +118,33 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 username(message.getChat().getUserName()).
                 userStatus(NEW).
                 build();
+    }
+
+    @Override
+    public MailParamsDto mapUserToMailParamsDto(TelegramUser user) {
+        return MailParamsDto.builder()
+                .id(cryptoTool.hashOf(user.getChatId()))
+                .emailTo(user.getEmail())
+                .build();
+    }
+
+    @Override
+    public PurchaseParamsDto mapToPurchaseParamsDto(TelegramUser user, Order order, Long price) {
+        return PurchaseParamsDto.builder()
+                .userId(cryptoTool.hashOf(user.getId()))
+                .userName(user.getFirstName())
+                .userEmail(user.getEmail())
+                .userAddress(user.getAddress())
+                .orderId(cryptoTool.hashOf(order.getId()))
+                .orderPrice(cryptoTool.hashOf(price))
+                .orderDescription(getDescriptionOrder(order))
+                .build();
+    }
+
+    private String getDescriptionOrder(Order order) {
+        StringBuilder description = new StringBuilder();
+        order.getProductsForCart().forEach(p -> description.append(p.getProduct().getName()).append("\n"));
+
+        return description.toString();
     }
 }

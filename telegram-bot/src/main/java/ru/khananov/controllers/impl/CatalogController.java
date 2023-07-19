@@ -19,10 +19,12 @@ public class CatalogController implements TelegramController {
 
     @Override
     public boolean support(Update update) {
-        if (!update.hasMessage()) return false;
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            return (update.getMessage().getText().equals(WILD_FLOWERS_COMMAND.getValue()) ||
+                    update.getMessage().getText().equals(GARDEN_FLOWERS_COMMAND.getValue()));
+        }
 
-        return (update.getMessage().getText().equals(WILD_FLOWERS_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(GARDEN_FLOWERS_COMMAND.getValue()));
+        return false;
     }
 
     @Override

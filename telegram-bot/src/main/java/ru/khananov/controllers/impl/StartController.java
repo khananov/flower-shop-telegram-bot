@@ -24,10 +24,12 @@ public class StartController implements TelegramController {
 
     @Override
     public boolean support(Update update) {
-        if (!update.hasMessage()) return false;
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            return (update.getMessage().getText().equals(START_COMMAND.getValue()) ||
+                    update.getMessage().getText().equals(MAIN_MENU_COMMAND.getValue()));
+        }
 
-        return (update.getMessage().getText().equals(START_COMMAND.getValue()) ||
-                update.getMessage().getText().equals(MAIN_MENU_COMMAND.getValue()));
+        return false;
     }
 
     @Override

@@ -13,8 +13,9 @@ public enum Command implements Serializable {
 
     BUY_COMMAND("\uD83D\uDCB3 Купить"),
 
-    CREATE_ORDER_COMMAND("\u2705 Оформить заказ"),
+    PAY_ORDER_COMMAND("\u2705 Оформить заказ"),
     CLEAR_ORDER_COMMAND("\u267B Отчистить корзину"),
+    CANCEL_ORDER_COMMAND("Отменить заказ"),
 
     PLUS_AMOUNT_COMMAND("\u2795"),
     MINUS_AMOUNT_COMMAND("\u2796"),
@@ -25,7 +26,7 @@ public enum Command implements Serializable {
     CHANGE_PROFILE_COMMAND("\uD83D\uDCDD Изменить информацию"),
     DELETE_PROFILE_COMMAND("\u274C Удалить профиль"),
 
-    GET_ORDERS_COMMAND("\u274C Список заказов"),
+    GET_ORDERS_COMMAND("\uD83D\uDCD1 Список заказов"),
 
     CONFIRM_COMMAND("Да"),
     REJECT_COMMAND("Нет"),

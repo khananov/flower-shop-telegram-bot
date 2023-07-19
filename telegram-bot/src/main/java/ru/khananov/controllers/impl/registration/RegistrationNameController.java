@@ -3,6 +3,7 @@ package ru.khananov.controllers.impl.registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
@@ -45,28 +46,33 @@ public class RegistrationNameController implements TelegramController {
     public void execute(Update update) {
         if (update.hasCallbackQuery() &&
                 update.getCallbackQuery().getData().equals(CONFIRM_COMMAND.getValue())) {
-            sendNextStep(update.getCallbackQuery().getMessage().getChatId());
+            sendNextStep(update.getCallbackQuery().getMessage().getChatId(),
+                    update.getCallbackQuery().getMessage().getMessageId());
         }
         else if (update.hasCallbackQuery() &&
                 update.getCallbackQuery().getData().equals(REJECT_COMMAND.getValue())) {
-            waitingName(update.getCallbackQuery().getMessage().getChatId());
+            waitingName(update.getCallbackQuery().getMessage().getChatId(),
+                    update.getCallbackQuery().getMessage().getMessageId());
         }
         else if (update.hasMessage()) {
             setName(update.getMessage().getChatId(), update.getMessage().getText());
         }
     }
 
-    private void sendNextStep(Long chatId) {
+    private void sendNextStep(Long chatId, Integer messageId) {
+        telegramService.deleteMessage(new DeleteMessage(chatId.toString(), messageId));
         registrationService.sendAddressInlineKeyboard(chatId,
                 MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup());
     }
 
-    private void waitingName(Long chatId) {
+    private void waitingName(Long chatId, Integer messageId) {
+        telegramService.deleteMessage(new DeleteMessage(chatId.toString(), messageId));
         telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваше имя:"));
     }
 
     private void setName(Long chatId, String address) {
         registrationService.setUserInfo(chatId, address);
-        sendNextStep(chatId);
+        registrationService.sendAddressInlineKeyboard(chatId,
+                MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup());
     }
 }

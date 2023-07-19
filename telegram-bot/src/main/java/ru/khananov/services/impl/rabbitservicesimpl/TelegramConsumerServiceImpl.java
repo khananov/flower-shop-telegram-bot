@@ -3,7 +3,7 @@ package ru.khananov.services.impl.rabbitservicesimpl;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.khananov.dto.MailParams;
+import ru.khananov.dto.MailParamsDto;
 import ru.khananov.models.domains.TemporalCodeCache;
 import ru.khananov.services.rabbitservices.TelegramConsumerService;
 import ru.khananov.utils.CryptoTool;
@@ -19,10 +19,10 @@ public class TelegramConsumerServiceImpl implements TelegramConsumerService {
 
     @Override
     @RabbitListener(queues = "MAIL_ANSWER_QUEUE")
-    public void consume(MailParams mailParams) {
+    public void consume(MailParamsDto mailParamsDto) {
         TemporalCodeCache.getInstance().addCode(
-                cryptoTool.valueOf(mailParams.getId()),
-                cryptoTool.valueOf(mailParams.getTempPassword())
+                cryptoTool.valueOf(mailParamsDto.getId()),
+                cryptoTool.valueOf(mailParamsDto.getTempPassword())
         );
     }
 }

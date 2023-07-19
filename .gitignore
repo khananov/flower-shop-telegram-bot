@@ -4,3 +4,5 @@
 /logs/
 /common-jpa/target/
 /FlowerShopTelegramBot.iml
+/mail-service/src/main/resources/application.properties
+/mail-service/target/

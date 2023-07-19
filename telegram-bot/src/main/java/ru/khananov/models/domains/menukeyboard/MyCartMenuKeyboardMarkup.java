@@ -25,7 +25,7 @@ public class MyCartMenuKeyboardMarkup {
         keyboardBuilder.selective(true);
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
-                builder().text(CREATE_ORDER_COMMAND.getValue()).build(),
+                builder().text(PAY_ORDER_COMMAND.getValue()).build(),
                 builder().text(CLEAR_ORDER_COMMAND.getValue()).build())));
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Collections.singletonList(

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import ru.khananov.dto.MailParams;
+import ru.khananov.dto.MailParamsDto;
 import ru.khananov.services.MailSenderService;
 import ru.khananov.services.rabbit.MailProducerService;
 import ru.khananov.utils.CryptoTool;
@@ -33,10 +33,10 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     @Override
-    public void send(MailParams mailParams) {
+    public void send(MailParamsDto mailParamsDto) {
         String subject = "Подтверждение электронной почты";
         String messageBody = getActivationMailPassword();
-        String mailTo = mailParams.getEmailTo();
+        String mailTo = mailParamsDto.getEmailTo();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(mailFrom);
@@ -44,8 +44,8 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
 
-        mailParams.setTempPassword(cryptoTool.hashOf(Long.valueOf(messageBody)));
-        mailProducerService.produceMailParam("MAIL_ANSWER_QUEUE", mailParams);
+        mailParamsDto.setTempPassword(cryptoTool.hashOf(Long.valueOf(messageBody)));
+        mailProducerService.produceMailParam("MAIL_ANSWER_QUEUE", mailParamsDto);
         javaMailSender.send(mailMessage);
     }
 

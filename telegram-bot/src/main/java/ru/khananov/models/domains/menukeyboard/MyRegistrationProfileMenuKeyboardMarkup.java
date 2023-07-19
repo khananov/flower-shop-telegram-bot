@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton.builder;
 import static ru.khananov.models.domains.Command.*;
@@ -25,6 +26,9 @@ public class MyRegistrationProfileMenuKeyboardMarkup {
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 builder().text(REGISTRATION_COMMAND.getValue()).build(),
+                builder().text(GET_ORDERS_COMMAND.getValue()).build())));
+
+        keyboardBuilder.keyboardRow(new KeyboardRow(Collections.singletonList(
                 builder().text(MAIN_MENU_COMMAND.getValue()).build())));
 
         return keyboardBuilder.build();

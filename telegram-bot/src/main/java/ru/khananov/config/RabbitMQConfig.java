@@ -23,5 +23,4 @@ public class RabbitMQConfig {
     public Queue mailAnswerQueue() {
         return new Queue("MAIL_ANSWER_QUEUE");
     }
-
 }

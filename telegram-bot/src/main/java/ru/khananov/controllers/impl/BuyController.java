@@ -24,10 +24,12 @@ public class BuyController implements TelegramController {
 
     @Override
     public boolean support(Update update) {
-        if (!update.hasCallbackQuery()) return false;
+        if (update.hasCallbackQuery()) {
+            return productService.findAll().stream()
+                    .anyMatch(product -> product.getName().equals(update.getCallbackQuery().getData()));
+        }
 
-        return productService.findAll().stream()
-                .anyMatch(product -> product.getName().equals(update.getCallbackQuery().getData()));
+        return false;
     }
 
     @Override

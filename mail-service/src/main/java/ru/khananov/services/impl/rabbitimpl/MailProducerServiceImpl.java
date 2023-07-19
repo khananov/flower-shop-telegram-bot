@@ -3,7 +3,7 @@ package ru.khananov.services.impl.rabbitimpl;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.khananov.dto.MailParams;
+import ru.khananov.dto.MailParamsDto;
 import ru.khananov.services.rabbit.MailProducerService;
 
 @Service
@@ -16,7 +16,7 @@ public class MailProducerServiceImpl implements MailProducerService {
     }
 
     @Override
-    public void produceMailParam(String rabbitQueue, MailParams mailParams) {
-        rabbitTemplate.convertAndSend(rabbitQueue, mailParams);
+    public void produceMailParam(String rabbitQueue, MailParamsDto mailParamsDto) {
+        rabbitTemplate.convertAndSend(rabbitQueue, mailParamsDto);
     }
 }

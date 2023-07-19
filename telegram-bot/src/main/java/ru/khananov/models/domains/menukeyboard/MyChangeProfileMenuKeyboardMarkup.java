@@ -31,6 +31,9 @@ public class MyChangeProfileMenuKeyboardMarkup {
 
         keyboardBuilder.keyboardRow(new KeyboardRow(Arrays.asList(
                 builder().text(DELETE_PROFILE_COMMAND.getValue()).build(),
+                builder().text(GET_ORDERS_COMMAND.getValue()).build())));
+
+        keyboardBuilder.keyboardRow(new KeyboardRow(Collections.singletonList(
                 builder().text(MAIN_MENU_COMMAND.getValue()).build())));
 
         return keyboardBuilder.build();

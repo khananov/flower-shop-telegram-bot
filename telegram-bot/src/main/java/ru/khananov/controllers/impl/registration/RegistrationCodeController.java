@@ -33,10 +33,12 @@ public class RegistrationCodeController implements TelegramController {
 
     @Override
     public boolean support(Update update) {
-        if (!(update.hasMessage() && update.getMessage().hasText())) return false;
-
-        return telegramUserService.getUserStatusByChatId(update.getMessage().getChatId())
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            return telegramUserService.getUserStatusByChatId(update.getMessage().getChatId())
                     .equals(WAITING_CODE_INPUT);
+        }
+
+        return false;
     }
 
     @Override

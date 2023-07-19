@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailParams {
+public class MailParamsDto {
     private String id;
     private String emailTo;
     private String tempPassword;

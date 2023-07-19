@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
+import org.telegram.telegrambots.meta.api.methods.AnswerPreCheckoutQuery;
+import org.telegram.telegrambots.meta.api.methods.invoices.SendInvoice;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.payments.PreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -34,6 +37,24 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             } catch (TelegramApiException e) {
                 log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
             }
+        }
+    }
+
+    @Override
+    public void sendAnswerPreCheckoutQuery(AnswerPreCheckoutQuery preCheckoutQuery) {
+            try {
+                execute(preCheckoutQuery);
+            } catch (TelegramApiException e) {
+                log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
+            }
+    }
+
+    @Override
+    public void sendInvoiceMessage(SendInvoice invoice) {
+        try {
+            execute(invoice);
+        } catch (TelegramApiException e) {
+            log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
         }
     }
 

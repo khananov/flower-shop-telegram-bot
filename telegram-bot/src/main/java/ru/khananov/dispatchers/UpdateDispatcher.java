@@ -29,6 +29,7 @@ public class UpdateDispatcher {
     private final RegistrationAddressController registrationAddressController;
     private final RegistrationEmailController registrationEmailController;
     private final RegistrationCodeController registrationCodeController;
+    private final PaymentController paymentController;
 
     @Autowired
     public UpdateDispatcher(StartController startController,
@@ -41,7 +42,8 @@ public class UpdateDispatcher {
                             RegistrationNameController registrationNameController,
                             RegistrationAddressController registrationAddressController,
                             RegistrationEmailController registrationEmailController,
-                            RegistrationCodeController registrationCodeController) {
+                            RegistrationCodeController registrationCodeController,
+                            PaymentController paymentController) {
         this.startController = startController;
         this.catalogController = catalogController;
         this.categoryController = categoryController;
@@ -53,6 +55,7 @@ public class UpdateDispatcher {
         this.registrationAddressController = registrationAddressController;
         this.registrationEmailController = registrationEmailController;
         this.registrationCodeController = registrationCodeController;
+        this.paymentController = paymentController;
     }
 
     private List<TelegramController> getControllers() {
@@ -67,7 +70,8 @@ public class UpdateDispatcher {
                 registrationNameController,
                 registrationAddressController,
                 registrationEmailController,
-                registrationCodeController);
+                registrationCodeController,
+                paymentController);
     }
 
     public void processUpdate(Update update) {
@@ -76,7 +80,7 @@ public class UpdateDispatcher {
             return;
         }
 
-        if (update.hasMessage() || update.hasCallbackQuery())
+        if (update.hasMessage() || update.hasCallbackQuery() || update.hasPreCheckoutQuery())
             distributeMessageByCommand(update);
         else
             log.error(new UnsupportedMessageTypeException("Неподдерживаемый тип сообщения"));

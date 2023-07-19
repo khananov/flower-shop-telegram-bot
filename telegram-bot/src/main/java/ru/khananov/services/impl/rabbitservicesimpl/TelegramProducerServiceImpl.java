@@ -3,7 +3,8 @@ package ru.khananov.services.impl.rabbitservicesimpl;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.khananov.dto.MailParams;
+import ru.khananov.dto.MailParamsDto;
+import ru.khananov.dto.PurchaseParamsDto;
 import ru.khananov.services.rabbitservices.TelegramProducerService;
 import ru.khananov.utils.CryptoTool;
 
@@ -19,12 +20,12 @@ public class TelegramProducerServiceImpl implements TelegramProducerService {
     }
 
     @Override
-    public void produce(String rabbitQueue, Long chatId, String email) {
-        MailParams mailParams = MailParams.builder()
-                .id(cryptoTool.hashOf(chatId))
-                .emailTo(email)
-                .build();
+    public void produceMail(String rabbitQueue, MailParamsDto mailParamsDto) {
+        rabbitTemplate.convertAndSend(rabbitQueue, mailParamsDto);
+    }
 
-        rabbitTemplate.convertAndSend(rabbitQueue, mailParams);
+    @Override
+    public void producePurchase(String rabbitQueue, PurchaseParamsDto purchaseParamsDto) {
+        rabbitTemplate.convertAndSend(rabbitQueue, purchaseParamsDto);
     }
 }
