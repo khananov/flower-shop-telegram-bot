@@ -18,7 +18,7 @@ public class TelegramConsumerServiceImpl implements TelegramConsumerService {
     }
 
     @Override
-    @RabbitListener(queues = "MAIL_ANSWER_QUEUE")
+    @RabbitListener(queues = "mail_answer_queue")
     public void consume(MailParamsDto mailParamsDto) {
         TemporalCodeCache.getInstance().addCode(
                 cryptoTool.valueOf(mailParamsDto.getId()),

@@ -45,7 +45,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setText(messageBody);
 
         mailParamsDto.setTempPassword(cryptoTool.hashOf(Long.valueOf(messageBody)));
-        mailProducerService.produceMailParam("MAIL_ANSWER_QUEUE", mailParamsDto);
+        mailProducerService.produceMailParam("mail_answer_queue", mailParamsDto);
         javaMailSender.send(mailMessage);
     }
 

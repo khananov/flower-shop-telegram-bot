@@ -3,6 +3,7 @@
 /telegram-bot/src/main/resources/application.properties
 /logs/
 /common-jpa/target/
+/common-utils/target/
 /FlowerShopTelegramBot.iml
 /mail-service/src/main/resources/application.properties
 /mail-service/target/

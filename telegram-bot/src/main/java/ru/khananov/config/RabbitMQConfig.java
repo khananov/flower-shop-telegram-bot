@@ -16,11 +16,11 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue mailVerificationQueue() {
-        return new Queue("MAIL_VERIFICATION_QUEUE");
+        return new Queue("mail_verification_queue");
     }
 
     @Bean
     public Queue mailAnswerQueue() {
-        return new Queue("MAIL_ANSWER_QUEUE");
+        return new Queue("mail_answer_queue");
     }
 }

@@ -17,7 +17,7 @@ public class MailConsumerServiceImpl implements MailConsumerService {
     }
 
     @Override
-    @RabbitListener(queues = "MAIL_VERIFICATION_QUEUE")
+    @RabbitListener(queues = "mail_verification_queue")
     public void consumerMailParams(MailParamsDto mailParamsDto) {
         mailSenderService.send(mailParamsDto);
     }

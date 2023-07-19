@@ -12,7 +12,6 @@ import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
 
 import static ru.khananov.models.domains.Command.CANCEL_CODE_COMMAND;
-import static ru.khananov.models.domains.Command.DELETE_PROFILE_COMMAND;
 import static ru.khananov.models.enums.UserStatus.REGISTERED;
 import static ru.khananov.models.enums.UserStatus.WAITING_CODE_INPUT;
 
@@ -46,11 +45,11 @@ public class RegistrationCodeController implements TelegramController {
         if (update.getMessage().getText().equals(CANCEL_CODE_COMMAND.getValue()))
             cancelInputCode(update.getMessage().getChatId());
         else
-            sendRepeatInputCode(update.getMessage().getChatId(), update.getMessage().getText());
+            checkInputCode(update.getMessage().getChatId(), update.getMessage().getText());
 
     }
 
-    private void sendRepeatInputCode(Long chatId, String inputCode) {
+    private void checkInputCode(Long chatId, String inputCode) {
         registrationService.codeCheck(chatId, inputCode);
     }
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public final class TemporalCodeCache {
     private static TemporalCodeCache INSTANCE;
-    private Map<Long, Long> codeCache = new HashMap<>();
+    private final Map<Long, Long> codeCache = new HashMap<>();
 
     private TemporalCodeCache() {
     }

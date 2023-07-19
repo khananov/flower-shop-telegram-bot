@@ -94,7 +94,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                             "Отправьте его сообщением боту для подтверждения почты.", chatId);
 
             telegramProducerService.produceMail(
-                    "MAIL_VERIFICATION_QUEUE",
+                    "mail_verification_queue",
                     telegramUserService.mapUserToMailParamsDto(user));
 
             user.setUserStatus(WAITING_CODE_INPUT);
