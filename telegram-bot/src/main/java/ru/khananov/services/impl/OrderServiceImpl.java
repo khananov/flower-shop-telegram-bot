@@ -17,13 +17,11 @@ import ru.khananov.repositories.OrderRepository;
 import ru.khananov.services.OrderService;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
-import ru.khananov.services.rabbitservices.TelegramProducerService;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static ru.khananov.models.enums.OrderStatus.*;
