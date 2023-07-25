@@ -7,3 +7,12 @@
 /FlowerShopTelegramBot.iml
 /mail-service/src/main/resources/application.properties
 /mail-service/target/
+/admin-panel/target/
+/admin-panel/admin-panel.iml
+/FlowerShopTelegramBot.ipr
+/FlowerShopTelegramBot.iws
+/telegram-bot/telegram-bot.iml
+/mail-service/mail-service.iml
+/common-jpa/common-jpa.iml
+/common-utils/common-utils.iml
+/telegram-bot/src/main/resources/META-INF/
