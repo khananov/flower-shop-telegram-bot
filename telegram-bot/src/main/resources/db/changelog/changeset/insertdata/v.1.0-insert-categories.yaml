@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: v.1.0-insert-category
+      author: khananov
+      changes:
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: name
+                  value: Садовые
+        - insert:
+            tableName: category
+            columns:
+              - column:
+                  name: name
+                  value: Полевые

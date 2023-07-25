@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: v.1.3-insert-product
+      author: khananov
+      changes:
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: Букет Ромашки
+              - column:
+                  name: description
+                  value: Танацетум - 3 шт., ромашки - 7 шт.
+              - column:
+                  name: price
+                  value: 8200
+              - column:
+                  name: category_id
+                  value: 2
+              - column:
+                  name: photo_url
+                  value: telegram-bot/src/main/resources/static/chamomile.png

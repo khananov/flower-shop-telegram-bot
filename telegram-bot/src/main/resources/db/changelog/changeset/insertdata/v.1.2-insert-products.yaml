@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: v.1.2-insert-product
+      author: khananov
+      changes:
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: Букет Альстромерии
+              - column:
+                  name: description
+                  value: Альстромерии - 7 шт.
+              - column:
+                  name: price
+                  value: 6900
+              - column:
+                  name: category_id
+                  value: 1
+              - column:
+                  name: photo_url
+                  value: telegram-bot/src/main/resources/static/alstromeria.png

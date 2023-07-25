@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: v.1.1-insert-product
+      author: khananov
+      changes:
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: Букет Роз
+              - column:
+                  name: description
+                  value: Роза красная 40 см. - 9 шт.
+              - column:
+                  name: price
+                  value: 6000
+              - column:
+                  name: category_id
+                  value: 1
+              - column:
+                  name: photo_url
+                  value: telegram-bot/src/main/resources/static/rose.png
