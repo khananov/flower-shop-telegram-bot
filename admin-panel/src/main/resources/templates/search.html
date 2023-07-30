@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Searching</title>
+</head>
+<body>
+<form th:method="get" th:action="@{/products/search}">
+    <label for="search">Введите название товара</label>
+    <input type="text" name="query" id="search"/>
+    <input type="submit" value="Поиск!"/>
+</form>
+
+<br/>
+
+<div th:each="product : ${products}">
+    <a th:href="@{/product/{id}(id=${product.getId()})}"
+       th:text="${product.getName()}">product</a>
+</div>
+
+<br/>
+
+<form action="/products">
+    <input type="submit" value="К товарам">
+</form>
+
+</body>
+</html>

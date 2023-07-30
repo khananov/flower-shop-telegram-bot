@@ -10,6 +10,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/createtables/create-product-for-cart-table.yaml
   - include:
+      file: db/changelog/changeset/createtables/create-security-user-table.yaml
+  - include:
       file: db/changelog/changeset/insertdata/v.1.0-insert-categories.yaml
   - include:
       file: db/changelog/changeset/insertdata/v.1.1-insert-products.yaml

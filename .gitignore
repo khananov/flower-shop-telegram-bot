@@ -16,3 +16,4 @@
 /common-jpa/common-jpa.iml
 /common-utils/common-utils.iml
 /telegram-bot/src/main/resources/META-INF/
+/admin-panel/src/main/resources/application.properties
