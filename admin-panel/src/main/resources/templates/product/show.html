@@ -5,18 +5,18 @@
     <title>Show</title>
 </head>
 <body>
-<p th:text="${product.getName()}"></p>
-<p th:text="${product.getDescription()}"></p>
-<p th:text="${product.getPrice() / 100 + ' руб.'}"></p>
+<p th:text="${'Имя товара: ' + product.getName()}"></p>
+<p th:text="${'Описание товара: ' + product.getDescription()}"></p>
+<p th:text="${'Стоимость товара: ' + product.getPrice() / 100 + ' руб.'}"></p>
 
-<form th:method="get" th:action="@{/products/{id}/edit (id=${product.getId()})}">
-    <input type="submit" value="Редактировать!">
+<form th:method="GET" th:action="@{/products/{id}/edit (id=${product.getId()})}">
+    <input type="submit" value="Редактировать">
 </form>
 
 <br/>
 
 <form th:method="DELETE" th:action="@{/products/{id} (id=${product.getId()})}">
-    <input type="submit" value="Удалить!">
+    <input type="submit" value="Удалить">
 </form>
 
 <br/>

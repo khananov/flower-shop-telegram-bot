@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${'Номер заказа: ' + order.getId()}"></p>
+<p th:text="${'Дата создания заказа: ' + order.getCreatedAt()}"></p>
+<p th:text="${'Статус заказа: ' + order.getOrderStatus().getValue()}"></p>
+
+<br/>
+
+<p th:text="${'Имя получателя: ' + user.getFirstName()}"></p>
+<p th:text="${'Адрес получателя: ' + user.getAddress()}"></p>
+<p th:text="${'Email получателя: ' + user.getEmail()}"></p>
+
+<br/>
+
+<p>Корзина:</p>
+
+<div th:each="product : ${products}">
+    <p th:text="${product.getProduct().getName() + ', ' + product.getAmount() + ' шт. - '
+     + (product.getAmount() * product.getPrice() / 100) + ' руб.'}">order</p>
+</div>
+
+<br/>
+
+<form th:method="PATCH" th:action="@{/orders/{id} (id=${order.getId()})}">
+    <input type="submit" value="Доставить заказ">
+</form>
+
+<br/>
+
+<form th:method="DELETE" th:action="@{/orders/{id} (id=${order.getId()})}">
+    <input type="submit" value="Удалить заказ">
+</form>
+
+<br/>
+
+<form action="/orders">
+    <input type="submit" value="К заказам">
+</form>
+</body>
+</html>

@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/new")
-    public String newBook(@ModelAttribute("product") Product product) {
+    public String newProduct(@ModelAttribute("product") Product product) {
         return "product/create";
     }
 
