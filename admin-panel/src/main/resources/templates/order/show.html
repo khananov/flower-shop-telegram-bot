@@ -25,16 +25,13 @@
 </div>
 
 <br/>
-
-<form th:method="PATCH" th:action="@{/orders/{id} (id=${order.getId()})}">
-    <input type="submit" value="Доставить заказ">
-</form>
+<div th:if="${order.getOrderStatus().getValue().equals('Оплачен')}">
+    <form th:method="PATCH" th:action="@{/orders/{id} (id=${order.getId()})}">
+        <input type="submit" value="Доставить заказ">
+    </form>
+</div>
 
 <br/>
-
-<form th:method="DELETE" th:action="@{/orders/{id} (id=${order.getId()})}">
-    <input type="submit" value="Удалить заказ">
-</form>
 
 <br/>
 

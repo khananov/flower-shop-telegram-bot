@@ -6,6 +6,7 @@ import ru.khananov.exceptions.ProductNotFoundException;
 import ru.khananov.models.entities.Order;
 import ru.khananov.repositories.OrderRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,8 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
 
     @Override
     public List<Order> findByIdStartingWith(String id) {
-        return orderRepository.findByIdStartingWith(Long.valueOf(id));
+        if (id == null) return new ArrayList<>();
+
+        return orderRepository.findByIdStartingWith(id);
     }
 }

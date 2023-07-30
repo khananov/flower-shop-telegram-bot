@@ -10,5 +10,5 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByTelegramUserId(Long id);
 
-    List<Order> findByIdStartingWith(Long id);
+    List<Order> findByIdStartingWith(String id);
 }

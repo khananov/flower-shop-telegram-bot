@@ -29,6 +29,7 @@ public class OrderController {
     @GetMapping("{id}")
     public String show(@PathVariable("id") Long id, Model model) {
         Order order = orderService.findById(id);
+
         model.addAttribute("order", order);
         model.addAttribute("user", order.getTelegramUser());
         model.addAttribute("products", order.getProductsForCart());
@@ -42,16 +43,10 @@ public class OrderController {
 
         return "redirect:/orders/" + id;
     }
-//
-//    @DeleteMapping("{id}")
-//    public String delete(@PathVariable("id") Long id) {
-//        orderService.removeById(id);
-//        return "redirect:/products";
-//    }
-//
+
     @GetMapping("/search")
     public String search(@RequestParam(name = "query", required = false) String query, Model model) {
         model.addAttribute("orders", orderService.findByIdStartingWith(query));
-        return "product/search";
+        return "order/search";
     }
 }

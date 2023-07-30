@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/products/new", "/products/{id}/edit").hasRole("ADMIN")
                         .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/orders/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
