@@ -7,10 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import ru.khananov.dto.MailParamsDto;
-import ru.khananov.dto.PurchaseParamsDto;
+import ru.khananov.exceptions.UserNotFoundException;
 import ru.khananov.models.domains.menukeyboard.MyChangeProfileMenuKeyboardMarkup;
 import ru.khananov.models.domains.menukeyboard.MyRegistrationProfileMenuKeyboardMarkup;
-import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.TelegramUser;
 import ru.khananov.models.enums.UserStatus;
 import ru.khananov.repositories.TelegramUserRepository;
@@ -38,7 +37,11 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     @Override
     public TelegramUser findByChatId(Long chatId) {
-        return telegramUserRepository.findByChatId(chatId);
+        return telegramUserRepository.findByChatId(chatId)
+                .orElseGet(() -> {
+                    log.error(new UserNotFoundException(chatId));
+                    return null;
+                });
     }
 
     @Override
@@ -51,7 +54,8 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     @Override
     public void sendProfileMessage(Long chatId) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = findByChatId(chatId);
+
         if (user.getUserStatus().equals(REGISTERED) || user.getUserStatus().equals(CONFIRMED))
             telegramService.sendMessage(buildProfileMessage(chatId,
                     MyChangeProfileMenuKeyboardMarkup.getChangeProfileMenuReplyKeyboardMarkup(),
@@ -64,29 +68,28 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     @Override
     public void deleteProfile(Long chatId) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = findByChatId(chatId);
         telegramUserRepository.delete(user);
     }
 
     @Override
     public UserStatus getUserStatusByChatId(Long chatId) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
-        return user.getUserStatus();
+        return findByChatId(chatId).getUserStatus();
     }
 
     @Override
     public void updateUserStatus(Long chatId, UserStatus status) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = findByChatId(chatId);
         user.setUserStatus(status);
         telegramUserRepository.save(user);
     }
 
     @Override
-    public String getUserEmailByChatId(Long chatId) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
-        if (user != null)
-            return user.getEmail();
-        return null;
+    public MailParamsDto mapUserToMailParamsDto(TelegramUser user) {
+        return MailParamsDto.builder()
+                .id(cryptoTool.hashOf(user.getChatId()))
+                .emailTo(user.getEmail())
+                .build();
     }
 
     private SendMessage buildProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup,
@@ -118,33 +121,5 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 username(message.getChat().getUserName()).
                 userStatus(NEW).
                 build();
-    }
-
-    @Override
-    public MailParamsDto mapUserToMailParamsDto(TelegramUser user) {
-        return MailParamsDto.builder()
-                .id(cryptoTool.hashOf(user.getChatId()))
-                .emailTo(user.getEmail())
-                .build();
-    }
-
-    @Override
-    public PurchaseParamsDto mapToPurchaseParamsDto(TelegramUser user, Order order, Long price) {
-        return PurchaseParamsDto.builder()
-                .userId(cryptoTool.hashOf(user.getId()))
-                .userName(user.getFirstName())
-                .userEmail(user.getEmail())
-                .userAddress(user.getAddress())
-                .orderId(cryptoTool.hashOf(order.getId()))
-                .orderPrice(cryptoTool.hashOf(price))
-                .orderDescription(getDescriptionOrder(order))
-                .build();
-    }
-
-    private String getDescriptionOrder(Order order) {
-        StringBuilder description = new StringBuilder();
-        order.getProductsForCart().forEach(p -> description.append(p.getProduct().getName()).append("\n"));
-
-        return description.toString();
     }
 }

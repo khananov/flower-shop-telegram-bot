@@ -11,6 +11,4 @@ public interface ProductForCartRepository extends JpaRepository<ProductForCart, 
     ProductForCart findByProductId(Long id);
 
     List<ProductForCart> findAllByOrderId(Long orderId);
-
-    ProductForCart deleteAllByOrderId(Long orderId);
 }

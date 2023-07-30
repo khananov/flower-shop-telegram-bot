@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void sendNameInlineKeyboard(Long chatId, InlineKeyboardMarkup keyboardMarkup) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = telegramUserService.findByChatId(chatId);
 
         if (user.getFirstName() == null)
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваше имя:"));
@@ -54,7 +54,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void sendAddressInlineKeyboard(Long chatId, InlineKeyboardMarkup keyboardMarkup) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = telegramUserService.findByChatId(chatId);
 
         if (user.getAddress() == null)
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваш адрес:"));
@@ -68,7 +68,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void sendEmailInlineKeyboard(Long chatId, InlineKeyboardMarkup keyboardMarkup) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = telegramUserService.findByChatId(chatId);
 
         if (user.getEmail() == null)
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Введите Ваш email:"));
@@ -82,7 +82,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void sendCodeInlineKeyboard(Long chatId, ReplyKeyboardMarkup keyboardMarkup) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = telegramUserService.findByChatId(chatId);
 
         if (user.getUserStatus().equals(CONFIRMED))
             telegramService.sendReplyKeyboard(
@@ -104,7 +104,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void setUserInfo(Long chatId, String info) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = telegramUserService.findByChatId(chatId);
 
         if (user.getUserStatus().equals(WAITING_NAME_INPUT))
             user.setFirstName(info);
@@ -121,7 +121,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void codeCheck(Long chatId, String inputCode) {
-        TelegramUser user = telegramUserRepository.findByChatId(chatId);
+        TelegramUser user = telegramUserService.findByChatId(chatId);
 
         if (inputCode.equals(TemporalCodeCache.getInstance().getCodeByChatId(chatId))) {
             TemporalCodeCache.getInstance().deleteCodeByChatId(chatId);

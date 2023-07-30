@@ -18,11 +18,7 @@ public interface TelegramUserService {
 
     UserStatus getUserStatusByChatId(Long chatId);
 
-    String getUserEmailByChatId(Long chatId);
-
     void updateUserStatus(Long chatId, UserStatus status);
 
     MailParamsDto mapUserToMailParamsDto(TelegramUser user);
-
-    PurchaseParamsDto mapToPurchaseParamsDto(TelegramUser user, Order order, Long price);
 }

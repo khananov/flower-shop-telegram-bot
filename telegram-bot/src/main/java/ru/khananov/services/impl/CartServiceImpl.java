@@ -11,7 +11,6 @@ import ru.khananov.models.entities.ProductForCart;
 import ru.khananov.repositories.OrderRepository;
 import ru.khananov.repositories.ProductForCartRepository;
 import ru.khananov.services.CartService;
-import ru.khananov.services.OrderService;
 import ru.khananov.services.TelegramService;
 
 import java.text.DecimalFormat;
@@ -22,13 +21,13 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
     private final ProductForCartRepository productForCartRepository;
     private final OrderRepository orderRepository;
-    private final OrderService orderService;
+    private final ru.khananov.services.OrderService orderService;
     private final TelegramService telegramService;
 
     @Autowired
     public CartServiceImpl(ProductForCartRepository productForCartRepository,
                            OrderRepository orderRepository,
-                           OrderService orderService,
+                           ru.khananov.services.OrderService orderService,
                            TelegramService telegramService) {
         this.productForCartRepository = productForCartRepository;
         this.orderRepository = orderRepository;

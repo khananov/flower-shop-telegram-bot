@@ -12,8 +12,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.payments.PreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -35,18 +33,18 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             try {
                 execute(message);
             } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
+                log.error(new SendMessageException("Failed to send text message: " + e.getMessage()));
             }
         }
     }
 
     @Override
     public void sendAnswerPreCheckoutQuery(AnswerPreCheckoutQuery preCheckoutQuery) {
-            try {
-                execute(preCheckoutQuery);
-            } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
-            }
+        try {
+            execute(preCheckoutQuery);
+        } catch (TelegramApiException e) {
+            log.error(new SendMessageException("Failed to send preCheckOut message: " + e.getMessage()));
+        }
     }
 
     @Override
@@ -54,7 +52,7 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
         try {
             execute(invoice);
         } catch (TelegramApiException e) {
-            log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
+            log.error(new SendMessageException("Failed to send invoice message: " + e.getMessage()));
         }
     }
 
@@ -63,7 +61,7 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             try {
                 execute(message);
             } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed send text message: " + e.getMessage()));
+                log.error(new SendMessageException("Failed to edit message: " + e.getMessage()));
             }
         }
     }
@@ -74,7 +72,7 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             try {
                 execute(photo);
             } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed send photo message: " + e.getMessage()));
+                log.error(new SendMessageException("Failed to send photo message: " + e.getMessage()));
             }
         }
     }
@@ -105,7 +103,7 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             try {
                 execute(message);
             } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed delete message: " + e.getMessage()));
+                log.error(new SendMessageException("Failed to delete message: " + e.getMessage()));
             }
         }
     }

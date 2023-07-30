@@ -14,7 +14,6 @@ import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.ProductForCart;
 import ru.khananov.models.entities.TelegramUser;
 import ru.khananov.repositories.OrderRepository;
-import ru.khananov.services.OrderService;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
 
@@ -28,7 +27,7 @@ import static ru.khananov.models.enums.OrderStatus.*;
 
 @Log4j2
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements ru.khananov.services.OrderService {
     private final OrderRepository orderRepository;
     private final TelegramUserService telegramUserService;
     private final TelegramService telegramService;
@@ -95,8 +94,8 @@ public class OrderServiceImpl implements OrderService {
             telegramService.sendMessage(new SendMessage(chatId.toString(),
                     """
                             Внимание!
-                            Сумма тестового заказа должны быть менее 1000 рублей.
-                            Для оплаты используйте данные тестовой карты
+                            Сумма тестового заказа должна быть менее 1000 рублей.
+                            Для оплаты используйте данные тестовой карты:
                                                         
                             Номер карты: 1111 1111 1111 1026
                             Действует до: 12/24 CVV: 000
@@ -130,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
                 .append(order.getCreatedAt().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))).append("\n")
                 .append("Сумма заказа: ")
                 .append(new DecimalFormat("#0.00").format(calculateOrderSum(order) / 100))
-                .append("\n").append("Статус заказа: ").append(order.getOrderStatus());
+                .append("\n").append("Статус заказа: ").append(order.getOrderStatus().getValue());
 
         return message.toString();
     }

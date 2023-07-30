@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public enum OrderStatus implements Serializable {
 
-    NEW("New"),
-    PAID("Paid"),
-    CANCELED("Canceled"),
-    DELIVERED("Delivered");
+    NEW("Новый"),
+    PAID("Оплачен"),
+    CANCELED("Отменён"),
+    DELIVERED("Доставлен");
 
     private final String value;
 
