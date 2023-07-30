@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.khananov.exceptions.SendMessageException;
 import ru.khananov.services.TelegramService;
@@ -106,5 +107,18 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
                 log.error(new SendMessageException("Failed to delete message: " + e.getMessage()));
             }
         }
+    }
+
+    @Override
+    public void deleteReplyKeyboard(Long chatId) {
+        ReplyKeyboardRemove replyKeyboardRemove = new ReplyKeyboardRemove();
+        replyKeyboardRemove.setRemoveKeyboard(true);
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setReplyMarkup(replyKeyboardRemove);
+        message.setText("Введите информацию о себе:");
+
+        sendMessage(message);
     }
 }

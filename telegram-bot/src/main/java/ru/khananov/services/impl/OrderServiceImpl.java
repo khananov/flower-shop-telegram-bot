@@ -72,7 +72,7 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Список заказов:\n"));
 
             for (Order order : orders) {
-                if (order.getOrderStatus().equals(CANCELED))
+                if (!order.getOrderStatus().equals(PAID))
                     telegramService.sendMessage(new SendMessage(
                             chatId.toString(), mapOrderToString(order)));
                 else

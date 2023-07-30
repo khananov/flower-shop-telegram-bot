@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.payments.PreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 
 public interface TelegramService {
     void sendMessage(SendMessage message);
@@ -27,4 +28,5 @@ public interface TelegramService {
 
     void deleteMessage(DeleteMessage message);
 
+    void deleteReplyKeyboard(Long chatId);
 }

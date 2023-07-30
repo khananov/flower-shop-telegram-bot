@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.models.domains.inlinekeyboard.MyRegistrationInlineKeyboard;
 import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
@@ -12,6 +14,8 @@ import ru.khananov.services.RegistrationService;
 import ru.khananov.services.TelegramService;
 import ru.khananov.services.TelegramUserService;
 import ru.khananov.services.rabbitservices.TelegramProducerService;
+
+import java.util.ArrayList;
 
 import static ru.khananov.models.domains.Command.*;
 
@@ -62,6 +66,7 @@ public class ProfileController implements TelegramController {
     }
 
     private void registration(Long chatId) {
+        telegramService.deleteReplyKeyboard(chatId);
         registrationService.sendNameInlineKeyboard(chatId,
                 MyRegistrationInlineKeyboard.getRegistrationKeyboardMarkup());
     }
