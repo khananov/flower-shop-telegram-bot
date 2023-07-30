@@ -23,25 +23,25 @@ public class ProductController {
     public String index(Model model) {
         model.addAttribute("products", productService.findAll());
 
-        return "index";
+        return "product/index";
     }
 
     @GetMapping("{id}")
     public String show(@PathVariable("id") Long id, Model model) {
         model.addAttribute("product", productService.findById(id));
 
-        return "show";
+        return "product/show";
     }
 
     @GetMapping("/new")
     public String newBook(@ModelAttribute("product") Product product) {
-        return "create";
+        return "product/create";
     }
 
     @PostMapping()
     public String create(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "create";
+            return "product/create";
 
         productService.save(product);
         return "redirect:/products";
@@ -50,14 +50,14 @@ public class ProductController {
     @GetMapping("{id}/edit")
     public String edit(@PathVariable("id") Long id, Model model) {
         model.addAttribute("product", productService.findById(id));
-        return "edit";
+        return "product/edit";
     }
 
     @PatchMapping("{id}")
     public String update(@PathVariable("id") Long id,
                          @ModelAttribute("product") @Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "edit";
+            return "product/edit";
 
         productService.save(product);
         return "redirect:/products";
@@ -72,6 +72,6 @@ public class ProductController {
     @GetMapping("/search")
     public String search(@RequestParam(name = "query", required = false) String query, Model model) {
         model.addAttribute("products", productService.findByNameStartingWith(query));
-        return "search";
+        return "product/search";
     }
 }

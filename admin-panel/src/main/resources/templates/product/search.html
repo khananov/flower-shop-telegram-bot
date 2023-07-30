@@ -14,7 +14,7 @@
 <br/>
 
 <div th:each="product : ${products}">
-    <a th:href="@{/product/{id}(id=${product.getId()})}"
+    <a th:href="@{/products/{id}(id=${product.getId()})}"
        th:text="${product.getName()}">product</a>
 </div>
 
