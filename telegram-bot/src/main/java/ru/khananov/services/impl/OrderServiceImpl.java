@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.payments.LabeledPrice;
 import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
+import ru.khananov.exceptions.OrderNotFoundException;
+import ru.khananov.exceptions.UserNotFoundException;
 import ru.khananov.models.domains.inlinekeyboard.MyCancelOrderInlineKeyboardMarkup;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.ProductForCart;
@@ -21,7 +23,9 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.khananov.models.enums.OrderStatus.*;
 
@@ -62,9 +66,7 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
 
     @Override
     public void sendAllOrdersByChatId(Long chatId) {
-        TelegramUser user = telegramUserService.findByChatId(chatId);
-        List<Order> orders = orderRepository.findAllByTelegramUserId(user.getId());
-        orders = orders.stream().filter(order -> order.getOrderStatus() != NEW).toList();
+        List<Order> orders = getSortedOrdersByChatId(chatId);
 
         if (orders.isEmpty())
             telegramService.sendMessage(new SendMessage(chatId.toString(), "У вас нет оплаченных заказов"));
@@ -161,6 +163,18 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
         }
     }
 
+    @Override
+    public boolean checkTotalAmountOrder(String textOrderId, Integer totalAmountPurchase) {
+        Long orderId = Long.valueOf(textOrderId);
+        Order order = orderRepository.findById(orderId)
+                                .orElseGet(() -> {
+            log.error(new OrderNotFoundException(orderId));
+            throw new OrderNotFoundException(orderId);
+        });
+
+        return getTotalOrderAmount(order) == totalAmountPurchase;
+    }
+
     private Long calculateOrderSum(Order order) {
         List<ProductForCart> products = order.getProductsForCart();
 
@@ -190,5 +204,21 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
             labeledPrices.add(labeledPrice);
         }
         return labeledPrices;
+    }
+
+    private int getTotalOrderAmount(Order order) {
+        return order.getProductsForCart().stream()
+                .mapToInt(product -> (int) (product.getAmount() * product.getPrice()))
+                .sum();
+    }
+
+    private List<Order> getSortedOrdersByChatId(Long chatId) {
+        TelegramUser user = telegramUserService.findByChatId(chatId);
+        List<Order> orders = orderRepository.findAllByTelegramUserId(user.getId());
+
+        return orders.stream()
+                .filter(order -> order.getOrderStatus() != NEW)
+                .sorted(Comparator.comparing(Order::getId))
+                .collect(Collectors.toList());
     }
 }

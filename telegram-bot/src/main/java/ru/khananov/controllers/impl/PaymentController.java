@@ -3,7 +3,9 @@ package ru.khananov.controllers.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.AnswerPreCheckoutQuery;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.payments.PreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
@@ -32,17 +34,26 @@ public class PaymentController implements TelegramController {
     @Override
     public void execute(Update update) {
         if (update.hasPreCheckoutQuery())
-            answerToPreCheckout(update.getPreCheckoutQuery().getId());
+            answerToPreCheckout(update.getPreCheckoutQuery(), update.getPreCheckoutQuery().getFrom().getId());
         else if (update.hasMessage() && update.getMessage().hasSuccessfulPayment())
             successfulPayment(update.getMessage().getChatId(), update.getMessage().getSuccessfulPayment());
     }
 
-    private void answerToPreCheckout(String preCheckoutId) {
-        AnswerPreCheckoutQuery preCheckoutQuery = new AnswerPreCheckoutQuery();
-        preCheckoutQuery.setPreCheckoutQueryId(preCheckoutId);
-        preCheckoutQuery.setOk(true);
+        private void answerToPreCheckout(PreCheckoutQuery preCheckout, Long chatId) {
+            AnswerPreCheckoutQuery answerPreCheckoutQuery = new AnswerPreCheckoutQuery();
+            answerPreCheckoutQuery.setPreCheckoutQueryId(preCheckout.getId());
 
-        telegramService.sendAnswerPreCheckoutQuery(preCheckoutQuery);
+            if (orderService.checkTotalAmountOrder(preCheckout.getInvoicePayload(), preCheckout.getTotalAmount()))
+                answerPreCheckoutQuery.setOk(true);
+            else {
+                answerPreCheckoutQuery.setOk(false);
+                answerPreCheckoutQuery.setErrorMessage("Сумма заказа была изменена");
+
+                telegramService.sendMessage(new SendMessage(chatId.toString(),
+                        "Сумма заказа была изменена, оформите заказ еще раз"));
+                }
+
+            telegramService.sendAnswerPreCheckoutQuery(answerPreCheckoutQuery);
     }
 
     private void successfulPayment(Long chatId, SuccessfulPayment successfulPayment) {

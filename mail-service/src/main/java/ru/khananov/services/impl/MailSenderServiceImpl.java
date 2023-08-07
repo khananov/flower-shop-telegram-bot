@@ -35,7 +35,8 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Override
     public void send(MailParamsDto mailParamsDto) {
         String subject = "Подтверждение электронной почты";
-        String messageBody = getActivationMailPassword();
+        String code = getActivationMailPassword();
+        String messageBody = code + " - Ваш код подтверждения почты";
         String mailTo = mailParamsDto.getEmailTo();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -44,7 +45,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
 
-        mailParamsDto.setTempPassword(cryptoTool.hashOf(Long.valueOf(messageBody)));
+        mailParamsDto.setTempPassword(cryptoTool.hashOf(Long.valueOf(code)));
         mailProducerService.produceMailParam("mail_answer_queue", mailParamsDto);
         javaMailSender.send(mailMessage);
     }

@@ -1,8 +1,6 @@
 package ru.khananov.models.domains;
 
-import java.io.Serializable;
-
-public enum Command implements Serializable {
+public enum Command {
     START_COMMAND("/start"),
     CART_COMMAND("\uD83D\uDECD Корзина"),
     CATALOG_COMMAND("\uD83D\uDCD6 Каталог"),

@@ -40,7 +40,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
         return telegramUserRepository.findByChatId(chatId)
                 .orElseGet(() -> {
                     log.error(new UserNotFoundException(chatId));
-                    return null;
+                    throw new UserNotFoundException(chatId);
                 });
     }
 

@@ -14,4 +14,6 @@ public interface OrderService {
     void payForOrder(Long chatId);
 
     void updateOrderStatusToPaid(SuccessfulPayment successfulPayment);
+
+    boolean checkTotalAmountOrder(String orderId, Integer totalAmountPurchase);
 }
