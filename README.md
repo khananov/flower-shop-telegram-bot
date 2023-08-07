@@ -19,8 +19,10 @@ Hibernate, Postgresql, Liquibase, RabbitMq, Log4j, Docker Compose
 
 ## Deploy with docker
 ```
-mvn -f flower-shop-telegram-bot/common-jpa/ clean install
-mvn -f flower-shop-telegram-bot/common-utils/ clean install
+mvn flower-shop-telegram-bot/common-jpa/ clean install
+mvn flower-shop-telegram-bot/common-utils/ clean install
+
+mvn flower-shop-telegram-bot/ spring-boot:build-image
 
 docker-compose up -d
 ```
