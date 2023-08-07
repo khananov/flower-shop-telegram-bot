@@ -1,5 +1,6 @@
 package ru.khananov.services.impl;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.khananov.exceptions.ProductNotFoundException;
@@ -10,6 +11,7 @@ import ru.khananov.services.ProductService;
 import java.util.List;
 
 @Service
+@Log4j2
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
@@ -25,7 +27,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        return productRepository.findById(id)
+                .orElseGet(() -> {
+                    log.error(new ProductNotFoundException(id));
+                    throw new ProductNotFoundException(id);
+                });
     }
 
     @Override

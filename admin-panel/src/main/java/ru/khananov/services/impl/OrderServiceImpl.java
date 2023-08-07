@@ -1,7 +1,9 @@
 package ru.khananov.services.impl;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.khananov.exceptions.OrderNotFoundException;
 import ru.khananov.exceptions.ProductNotFoundException;
 import ru.khananov.models.entities.Order;
 import ru.khananov.repositories.OrderRepository;
@@ -14,6 +16,7 @@ import static ru.khananov.models.enums.OrderStatus.DELIVERED;
 import static ru.khananov.models.enums.OrderStatus.NEW;
 
 @Service
+@Log4j2
 public class OrderServiceImpl implements ru.khananov.services.OrderService {
     private final OrderRepository orderRepository;
 
@@ -30,17 +33,18 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
 
     @Override
     public Order findById(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        return orderRepository.findById(id)
+                .orElseGet(() -> {
+                    log.error(new OrderNotFoundException(id));
+                    throw new OrderNotFoundException(id);
+                });
     }
 
     @Override
     public void delivered(Long id) {
         Order order = findById(id);
-
-        if (order != null) {
-            order.setOrderStatus(DELIVERED);
-            orderRepository.save(order);
-        }
+        order.setOrderStatus(DELIVERED);
+        orderRepository.save(order);
     }
 
     @Override
