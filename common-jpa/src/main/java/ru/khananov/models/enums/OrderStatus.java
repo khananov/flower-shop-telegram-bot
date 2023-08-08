@@ -1,9 +1,6 @@
 package ru.khananov.models.enums;
 
-import java.io.Serializable;
-
-public enum OrderStatus implements Serializable {
-
+public enum OrderStatus {
     NEW("Новый"),
     PAID("Оплачен"),
     CANCELED("Отменён"),

@@ -1,7 +1,6 @@
 package ru.khananov.services;
 
 import ru.khananov.models.entities.Product;
-import ru.khananov.models.entities.ProductForCart;
 
 import java.util.List;
 

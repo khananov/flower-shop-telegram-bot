@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.khananov.exceptions.OrderNotFoundException;
-import ru.khananov.exceptions.ProductNotFoundException;
 import ru.khananov.models.entities.Order;
 import ru.khananov.repositories.OrderRepository;
 

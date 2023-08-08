@@ -1,8 +1,6 @@
 package ru.khananov.models.enums;
 
-import java.io.Serializable;
-
-public enum UserStatus implements Serializable {
+public enum UserStatus {
     NEW("New"),
     WAITING_NAME_INPUT("Waiting_name_input"),
     WAITING_ADDRESS_INPUT("Waiting_address_input"),
