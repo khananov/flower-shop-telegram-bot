@@ -19,8 +19,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.khananov.exceptions.SendMessageException;
 import ru.khananov.services.TelegramService;
 
-@Log4j2
 @Service
+@Log4j2
 public class TelegramServiceImpl extends DefaultAbsSender implements TelegramService {
 
     @Autowired
@@ -30,12 +30,11 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
 
     @Override
     public void sendMessage(SendMessage message) {
-        if (message != null) {
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed to send text message: " + e.getMessage()));
-            }
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            log.error(new SendMessageException("Failed to send text message: " + e.getMessage()));
+            throw new SendMessageException("Failed to send text message: " + e.getMessage());
         }
     }
 
@@ -45,6 +44,7 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             execute(preCheckoutQuery);
         } catch (TelegramApiException e) {
             log.error(new SendMessageException("Failed to send preCheckOut message: " + e.getMessage()));
+            throw new SendMessageException("Failed to send text message: " + e.getMessage());
         }
     }
 
@@ -54,27 +54,26 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
             execute(invoice);
         } catch (TelegramApiException e) {
             log.error(new SendMessageException("Failed to send invoice message: " + e.getMessage()));
+            throw new SendMessageException("Failed to send text message: " + e.getMessage());
         }
     }
 
     public void sendEditMessage(EditMessageText message) {
-        if (message != null) {
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed to edit message: " + e.getMessage()));
-            }
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            log.error(new SendMessageException("Failed to edit message: " + e.getMessage()));
+            throw new SendMessageException("Failed to send text message: " + e.getMessage());
         }
     }
 
     @Override
     public void sendPhoto(SendPhoto photo) {
-        if (photo != null) {
-            try {
-                execute(photo);
-            } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed to send photo message: " + e.getMessage()));
-            }
+        try {
+            execute(photo);
+        } catch (TelegramApiException e) {
+            log.error(new SendMessageException("Failed to send photo message: " + e.getMessage()));
+            throw new SendMessageException("Failed to send text message: " + e.getMessage());
         }
     }
 
@@ -100,12 +99,11 @@ public class TelegramServiceImpl extends DefaultAbsSender implements TelegramSer
 
     @Override
     public void deleteMessage(DeleteMessage message) {
-        if (message != null) {
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                log.error(new SendMessageException("Failed to delete message: " + e.getMessage()));
-            }
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            log.error(new SendMessageException("Failed to delete message: " + e.getMessage()));
+            throw new SendMessageException("Failed to send text message: " + e.getMessage());
         }
     }
 

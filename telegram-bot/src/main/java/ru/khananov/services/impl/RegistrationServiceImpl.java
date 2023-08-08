@@ -1,6 +1,5 @@
 package ru.khananov.services.impl;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +18,6 @@ import ru.khananov.services.rabbitservices.TelegramProducerService;
 
 import static ru.khananov.models.enums.UserStatus.*;
 
-@Log4j2
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
     private final TelegramUserRepository telegramUserRepository;

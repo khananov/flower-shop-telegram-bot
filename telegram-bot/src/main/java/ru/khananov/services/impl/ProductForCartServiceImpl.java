@@ -4,6 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.khananov.exceptions.ProductForCartNotFoundException;
+import ru.khananov.exceptions.ProductNotFoundException;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.Product;
 import ru.khananov.models.entities.ProductForCart;
@@ -16,10 +18,10 @@ import ru.khananov.services.ProductService;
 import java.util.List;
 import java.util.Objects;
 
-@Log4j2
 @Service
+@Log4j2
 public class ProductForCartServiceImpl implements ProductForCartService {
-    public final ProductForCartRepository productForCartRepository;
+    private final ProductForCartRepository productForCartRepository;
     private final OrderService orderService;
     private final ProductService productService;
     private final CartService cartService;
@@ -55,12 +57,13 @@ public class ProductForCartServiceImpl implements ProductForCartService {
     @Override
     public List<ProductForCart> findAllByChatId(Long chatId) {
         Order order = orderService.findLastOrderByChatId(chatId);
+
         return productForCartRepository.findAllByOrderId(order.getId());
     }
 
     @Override
-    public ProductForCart findByProductId(Long productId) {
-        return productForCartRepository.findByProductId(productId);
+    public List<ProductForCart> findAllByOrderId(Long orderId) {
+        return productForCartRepository.findAllByOrderId(orderId);
     }
 
     @Override
@@ -70,16 +73,19 @@ public class ProductForCartServiceImpl implements ProductForCartService {
 
         Product product = productService.findByName(productName);
         Order order = orderService.findLastOrderByChatId(message.getChatId());
+
         ProductForCart productForCart = order.getProductsForCart().stream()
                 .filter(p -> Objects.equals(p.getProduct().getId(), product.getId()))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElseGet(() -> {
+                    log.error(new ProductForCartNotFoundException(product.getId()));
+                    throw new ProductForCartNotFoundException(product.getId());
+                });
 
-        if (productForCart != null) {
-            productForCart.setAmount(productForCart.getAmount() + 1);
-            productForCartRepository.save(productForCart);
+        productForCart.setAmount(productForCart.getAmount() + 1);
+        productForCartRepository.save(productForCart);
 
-            sendEditProductAmount(message.getChatId(), message.getMessageId(), productForCart);
-        }
+        cartService.sendEditMessageProductInOrder(message.getChatId(), message.getMessageId(), productForCart);
     }
 
     @Override
@@ -89,26 +95,24 @@ public class ProductForCartServiceImpl implements ProductForCartService {
 
         Product product = productService.findByName(productName);
         Order order = orderService.findLastOrderByChatId(message.getChatId());
+
         ProductForCart productForCart = order.getProductsForCart().stream()
                 .filter(p -> Objects.equals(p.getProduct().getId(), product.getId()))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElseGet(() -> {
+                    log.error(new ProductNotFoundException(product.getId()));
+                    throw new ProductNotFoundException(product.getId());
+                });
 
-        if (productForCart != null) {
-
-            if (productForCart.getAmount() == 1) {
-                productForCartRepository.delete(productForCart);
-                productForCart = null;
-            } else {
-                productForCart.setAmount(productForCart.getAmount() - 1);
-                productForCartRepository.save(productForCart);
-            }
-
-            sendEditProductAmount(message.getChatId(), message.getMessageId(), productForCart);
+        if (productForCart.getAmount() == 1) {
+            productForCartRepository.delete(productForCart);
+            productForCart = null;
+        } else {
+            productForCart.setAmount(productForCart.getAmount() - 1);
+            productForCartRepository.save(productForCart);
         }
-    }
 
-    private void sendEditProductAmount(Long chatId, Integer messageId, ProductForCart productForCart) {
-        cartService.sendEditMessageProductInOrder(chatId, messageId, productForCart);
+        cartService.sendEditMessageProductInOrder(message.getChatId(), message.getMessageId(), productForCart);
     }
 
     private ProductForCart createProductForCart(Order order, Product product) {

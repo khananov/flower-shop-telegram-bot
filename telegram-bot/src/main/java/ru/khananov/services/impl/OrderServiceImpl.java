@@ -10,7 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.payments.LabeledPrice;
 import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
 import ru.khananov.exceptions.OrderNotFoundException;
-import ru.khananov.exceptions.UserNotFoundException;
 import ru.khananov.models.domains.inlinekeyboard.MyCancelOrderInlineKeyboardMarkup;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.ProductForCart;
@@ -29,8 +28,8 @@ import java.util.stream.Collectors;
 
 import static ru.khananov.models.enums.OrderStatus.*;
 
-@Log4j2
 @Service
+@Log4j2
 public class OrderServiceImpl implements ru.khananov.services.OrderService {
     private final OrderRepository orderRepository;
     private final TelegramUserService telegramUserService;
@@ -53,15 +52,18 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
         TelegramUser telegramUser = telegramUserService.findByChatId(chatId);
 
         List<Order> orders = orderRepository.findAllByTelegramUserId(telegramUser.getId());
+
         Order lastOrder = orders.stream()
                 .filter(o -> o.getOrderStatus() == NEW)
                 .findFirst()
                 .orElse(null);
 
-        if (lastOrder == null)
+        if (lastOrder == null) {
             lastOrder = createOrder(telegramUser);
+            orderRepository.save(lastOrder);
+        }
 
-        return orderRepository.save(lastOrder);
+        return lastOrder;
     }
 
     @Override
@@ -74,13 +76,13 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
             telegramService.sendMessage(new SendMessage(chatId.toString(), "Список заказов:\n"));
 
             for (Order order : orders) {
-                if (!order.getOrderStatus().equals(PAID))
-                    telegramService.sendMessage(new SendMessage(
-                            chatId.toString(), mapOrderToString(order)));
-                else
+                if (order.getOrderStatus().equals(PAID))
                     telegramService.sendInlineKeyboard(
                             MyCancelOrderInlineKeyboardMarkup.getCancelOrderKeyboardMarkup(),
                             mapOrderToString(order), chatId);
+                else
+                    telegramService.sendMessage(new SendMessage(
+                            chatId.toString(), mapOrderToString(order)));
             }
         }
     }
@@ -89,10 +91,10 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
     public void payForOrder(Long chatId) {
         Order order = findLastOrderByChatId(chatId);
 
-        if (order.getProductsForCart().isEmpty()) {
+        if (order.getProductsForCart().isEmpty())
             telegramService.sendMessage(new SendMessage(chatId.toString(),
                     "Ваша корзина пуста"));
-        } else {
+        else {
             telegramService.sendMessage(new SendMessage(chatId.toString(),
                     """
                             Внимание!
@@ -105,6 +107,42 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
 
             telegramService.sendInvoiceMessage(createSendInvoice(chatId, order));
         }
+    }
+
+    @Override
+    public void cancelOrder(Message message) {
+        int startIndexOrderId = message.getText().indexOf("№") + 1;
+        int endIndexOrderId = message.getText().indexOf("\n");
+        String orderId = message.getText().substring(startIndexOrderId, endIndexOrderId);
+
+        Order canceledOrder = findOrderById(orderId);
+        canceledOrder.setOrderStatus(CANCELED);
+
+        orderRepository.save(canceledOrder);
+        telegramService.sendMessage(new SendMessage(
+                    message.getChatId().toString(), "Заказ №" + orderId + " отменен"));
+    }
+
+    @Override
+    public void updateOrderStatusToPaid(SuccessfulPayment successfulPayment) {
+        Order order = findOrderById(successfulPayment.getInvoicePayload());
+        order.setOrderStatus(PAID);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public boolean checkTotalAmountOrder(String textOrderId, Integer totalAmountPurchase) {
+        return getTotalOrderAmount(findOrderById(textOrderId)) == totalAmountPurchase;
+    }
+
+    private Order findOrderById(String stringOrderId) {
+        Long orderId = Long.valueOf(stringOrderId);
+
+        return orderRepository.findById(orderId)
+                .orElseGet(() -> {
+                    log.error(new OrderNotFoundException(orderId));
+                    throw new OrderNotFoundException(orderId);
+                });
     }
 
     private Order createOrder(TelegramUser telegramUser) {
@@ -130,56 +168,15 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
         message.append("\n").append("Дата создания заказа: ")
                 .append(order.getCreatedAt().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))).append("\n")
                 .append("Сумма заказа: ")
-                .append(new DecimalFormat("#0.00").format(calculateOrderSum(order) / 100))
+                .append(new DecimalFormat("#0.00").format(getTotalOrderAmount(order) / 100))
                 .append("\n").append("Статус заказа: ").append(order.getOrderStatus().getValue());
 
         return message.toString();
     }
 
-    @Override
-    public void cancelOrder(Message message) {
-        int startIndexOrderId = message.getText().indexOf("№") + 1;
-        int endIndexOrderId = message.getText().indexOf("\n");
-        String orderId = message.getText().substring(startIndexOrderId, endIndexOrderId);
-
-        Order canceledOrder = orderRepository.findById(Long.valueOf(orderId)).orElse(null);
-
-        if (canceledOrder != null) {
-            canceledOrder.setOrderStatus(CANCELED);
-            orderRepository.save(canceledOrder);
-            telegramService.sendMessage(new SendMessage(
-                    message.getChatId().toString(), "Заказ №" + orderId + " отменен"));
-        }
-    }
-
-    @Override
-    public void updateOrderStatusToPaid(SuccessfulPayment successfulPayment) {
-        Order order = orderRepository.findById(Long.valueOf(successfulPayment.getInvoicePayload()))
-                .orElse(null);
-
-        if (order != null) {
-            order.setOrderStatus(PAID);
-            orderRepository.save(order);
-        }
-    }
-
-    @Override
-    public boolean checkTotalAmountOrder(String textOrderId, Integer totalAmountPurchase) {
-        Long orderId = Long.valueOf(textOrderId);
-        Order order = orderRepository.findById(orderId)
-                                .orElseGet(() -> {
-            log.error(new OrderNotFoundException(orderId));
-            throw new OrderNotFoundException(orderId);
-        });
-
-        return getTotalOrderAmount(order) == totalAmountPurchase;
-    }
-
-    private Long calculateOrderSum(Order order) {
-        List<ProductForCart> products = order.getProductsForCart();
-
-        return (long) products.stream()
-                .mapToInt(product -> Math.toIntExact(product.getPrice() * product.getAmount()))
+    private int getTotalOrderAmount(Order order) {
+        return order.getProductsForCart().stream()
+                .mapToInt(product -> (int) (product.getAmount() * product.getPrice()))
                 .sum();
     }
 
@@ -198,18 +195,14 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
 
     private List<LabeledPrice> createLabelPrice(Order order) {
         List<LabeledPrice> labeledPrices = new ArrayList<>();
+
         for (ProductForCart product : order.getProductsForCart()) {
             LabeledPrice labeledPrice = new LabeledPrice(product.getProduct().getName(),
                     (int) (product.getAmount() * product.getPrice()));
             labeledPrices.add(labeledPrice);
         }
-        return labeledPrices;
-    }
 
-    private int getTotalOrderAmount(Order order) {
-        return order.getProductsForCart().stream()
-                .mapToInt(product -> (int) (product.getAmount() * product.getPrice()))
-                .sum();
+        return labeledPrices;
     }
 
     private List<Order> getSortedOrdersByChatId(Long chatId) {

@@ -3,7 +3,7 @@ package ru.khananov.services.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.khananov.exceptions.ProductNotFoundException;
 import ru.khananov.models.domains.MyProductSendPhoto;
 import ru.khananov.models.entities.Product;
 import ru.khananov.repositories.ProductRepository;
@@ -13,8 +13,8 @@ import ru.khananov.services.TelegramService;
 import java.text.DecimalFormat;
 import java.util.List;
 
-@Log4j2
 @Service
+@Log4j2
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final TelegramService telegramService;
@@ -42,8 +42,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void sendProductsByCategory(Long chatId, String text) {
-        int skipEmojiIndex = 3;
-        String categoryName = text.substring(skipEmojiIndex);
+        int emojiLength = 3;
+        String categoryName = text.substring(emojiLength);
         List<Product> products = findAllByCategoryName(categoryName);
 
         products.forEach(product -> telegramService.sendPhoto(new MyProductSendPhoto(
@@ -52,7 +52,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findByName(String name) {
-        return productRepository.findByName(name);
+        return productRepository.findByName(name)
+                .orElseGet(() -> {
+                    log.error(new ProductNotFoundException(name));
+                    throw new ProductNotFoundException(name);
+                });
     }
 
     private Double convertToRub(Product product) {

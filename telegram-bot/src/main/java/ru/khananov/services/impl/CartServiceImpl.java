@@ -1,7 +1,7 @@
 package ru.khananov.services.impl;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -9,27 +9,27 @@ import ru.khananov.models.domains.inlinekeyboard.MyProductInOrderInlineKeyboard;
 import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.ProductForCart;
 import ru.khananov.repositories.OrderRepository;
-import ru.khananov.repositories.ProductForCartRepository;
 import ru.khananov.services.CartService;
+import ru.khananov.services.OrderService;
+import ru.khananov.services.ProductForCartService;
 import ru.khananov.services.TelegramService;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-@Log4j2
 @Service
 public class CartServiceImpl implements CartService {
-    private final ProductForCartRepository productForCartRepository;
+    private final ProductForCartService productForCartService;
     private final OrderRepository orderRepository;
-    private final ru.khananov.services.OrderService orderService;
+    private final OrderService orderService;
     private final TelegramService telegramService;
 
     @Autowired
-    public CartServiceImpl(ProductForCartRepository productForCartRepository,
+    public CartServiceImpl(@Lazy ProductForCartService productForCartService,
                            OrderRepository orderRepository,
-                           ru.khananov.services.OrderService orderService,
+                           OrderService orderService,
                            TelegramService telegramService) {
-        this.productForCartRepository = productForCartRepository;
+        this.productForCartService = productForCartService;
         this.orderRepository = orderRepository;
         this.orderService = orderService;
         this.telegramService = telegramService;
@@ -38,7 +38,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void sendProductsInOrder(Long chatId) {
         Order order = orderService.findLastOrderByChatId(chatId);
-        List<ProductForCart> products = productForCartRepository.findAllByOrderId(order.getId());
+        List<ProductForCart> products = productForCartService.findAllByOrderId(order.getId());
 
         products.forEach(product -> telegramService.sendInlineKeyboard(
                 MyProductInOrderInlineKeyboard.getProductsInOrderKeyboardMarkup(),

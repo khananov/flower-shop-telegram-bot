@@ -2,8 +2,6 @@ package ru.khananov.services;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.khananov.dto.MailParamsDto;
-import ru.khananov.dto.PurchaseParamsDto;
-import ru.khananov.models.entities.Order;
 import ru.khananov.models.entities.TelegramUser;
 import ru.khananov.models.enums.UserStatus;
 

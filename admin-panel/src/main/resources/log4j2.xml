@@ -7,7 +7,7 @@
         </Console>
 
         <File name="File" fileName="logs/admin-panel/admin-panel.log" immediateFlush="true" append="false">
-            <PatternLayout pattern="%d %p %C{1.} [%t] %m%n"/>
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable"/>
         </File>
     </Appenders>
 

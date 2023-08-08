@@ -19,8 +19,8 @@ import ru.khananov.utils.CryptoTool;
 
 import static ru.khananov.models.enums.UserStatus.*;
 
-@Log4j2
 @Service
+@Log4j2
 public class TelegramUserServiceImpl implements TelegramUserService {
     private final TelegramService telegramService;
     private final TelegramUserRepository telegramUserRepository;
@@ -46,10 +46,11 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     @Override
     public void saveNewUser(Message message) {
-        TelegramUser telegramUser = findByChatId(message.getChatId());
-
-        if (telegramUser == null)
+        try {
+            TelegramUser telegramUser = findByChatId(message.getChatId());
+        } catch (UserNotFoundException e) {
             telegramUserRepository.save(buildTelegramUser(message));
+        }
     }
 
     @Override
@@ -95,7 +96,6 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     private SendMessage buildProfileMessage(Long chatId, ReplyKeyboardMarkup keyboardMarkup,
                                             TelegramUser user) {
         String firstName = user.getFirstName() != null ? user.getFirstName() : "";
-        String lastName = user.getLastName() != null ? user.getLastName() : "";
         String username = user.getUsername() != null ? user.getUsername() : "";
         String address = user.getAddress() != null ? user.getAddress() : "";
         String email = user.getEmail() != null ? user.getEmail() : "";
@@ -105,7 +105,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
                 .replyMarkup(keyboardMarkup)
                 .text("= = = = = = = = = = = = = = = = =\n" +
                         "\n \u2139 Информация о Вас: \n" +
-                        "\n \uD83D\uDCAD Имя: " + firstName + " " + lastName +
+                        "\n \uD83D\uDCAD Имя: " + firstName +
                         "\n \uD83D\uDD10 Username: " + username +
                         "\n \uD83C\uDF0F Адрес: " + address +
                         "\n \uD83D\uDCEA Email: " + email + "\n" +
