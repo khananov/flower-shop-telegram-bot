@@ -23,21 +23,10 @@ public final class TemporalCodeCache {
     }
 
     public String getCodeByChatId(Long chatId) {
-        String code;
-        if (codeCache.containsKey(chatId)) {
-            code = codeCache.get(chatId).toString();
-            codeCache.remove(chatId, code);
-            return code;
-        }
-
-        return null;
+        return codeCache.get(chatId).toString();
     }
 
     public void deleteCodeByChatId(Long chatId) {
-        String code;
-        if (codeCache.containsKey(chatId)) {
-            code = codeCache.get(chatId).toString();
-            codeCache.remove(chatId, code);
-        }
+        codeCache.remove(chatId);
     }
 }

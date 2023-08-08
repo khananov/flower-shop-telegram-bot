@@ -15,8 +15,8 @@ import ru.khananov.exceptions.UnsupportedMessageTypeException;
 import java.util.Arrays;
 import java.util.List;
 
-@Log4j2
 @Component
+@Log4j2
 public class UpdateDispatcher {
     private final StartController startController;
     private final CatalogController catalogController;

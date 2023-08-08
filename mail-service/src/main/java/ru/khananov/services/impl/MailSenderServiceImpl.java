@@ -34,34 +34,34 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     public void send(MailParamsDto mailParamsDto) {
+        String mailTo = mailParamsDto.getEmailTo();
         String subject = "Подтверждение электронной почты";
         String code = getActivationMailPassword();
         String messageBody = code + " - Ваш код подтверждения почты";
-        String mailTo = mailParamsDto.getEmailTo();
 
+        mailParamsDto.setTempPassword(cryptoTool.hashOf(Long.valueOf(code)));
+        mailProducerService.produceMailParam("mail_answer_queue", mailParamsDto);
+
+        javaMailSender.send(createMailMessage(mailTo, subject, messageBody));
+    }
+
+    private String getActivationMailPassword() {
+        StringBuilder result = new StringBuilder();
+
+        for(int i = 0; i < 4; i++){
+            result.append((int) (Math.random() * 10));
+        }
+
+        return result.toString();
+    }
+
+    private SimpleMailMessage createMailMessage(String mailTo, String subject, String messageBody) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(mailFrom);
         mailMessage.setTo(mailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(messageBody);
 
-        mailParamsDto.setTempPassword(cryptoTool.hashOf(Long.valueOf(code)));
-        mailProducerService.produceMailParam("mail_answer_queue", mailParamsDto);
-        javaMailSender.send(mailMessage);
-    }
-
-    private String getActivationMailPassword() {
-        List<Integer> numbers = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            numbers.add(i);
-        }
-
-        Collections.shuffle(numbers);
-
-        StringBuilder result = new StringBuilder();
-        for(int i = 0; i < 4; i++){
-            result.append(numbers.get(i));
-        }
-        return result.toString();
+        return mailMessage;
     }
 }
