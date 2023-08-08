@@ -124,8 +124,8 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
     }
 
     @Override
-    public void updateOrderStatusToPaid(SuccessfulPayment successfulPayment) {
-        Order order = findOrderById(successfulPayment.getInvoicePayload());
+    public void updateOrderStatusToPaid(String orderId) {
+        Order order = findOrderById(orderId);
         order.setOrderStatus(PAID);
         orderRepository.save(order);
     }

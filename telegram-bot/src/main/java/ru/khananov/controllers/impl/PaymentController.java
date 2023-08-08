@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.methods.AnswerPreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.payments.PreCheckoutQuery;
-import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
 import ru.khananov.controllers.TelegramController;
 import ru.khananov.models.domains.menukeyboard.MyGeneralMenuKeyboardMarkup;
 import ru.khananov.services.OrderService;
@@ -34,12 +33,13 @@ public class PaymentController implements TelegramController {
     @Override
     public void execute(Update update) {
         if (update.hasPreCheckoutQuery())
-            answerToPreCheckout(update.getPreCheckoutQuery(), update.getPreCheckoutQuery().getFrom().getId());
+            answerToPreCheckout(update.getPreCheckoutQuery());
         else if (update.hasMessage() && update.getMessage().hasSuccessfulPayment())
-            successfulPayment(update.getMessage().getChatId(), update.getMessage().getSuccessfulPayment());
+            successfulPayment(update.getMessage().getChatId(),
+                    update.getMessage().getSuccessfulPayment().getInvoicePayload());
     }
 
-        private void answerToPreCheckout(PreCheckoutQuery preCheckout, Long chatId) {
+        private void answerToPreCheckout(PreCheckoutQuery preCheckout) {
             AnswerPreCheckoutQuery answerPreCheckoutQuery = new AnswerPreCheckoutQuery();
             answerPreCheckoutQuery.setPreCheckoutQueryId(preCheckout.getId());
 
@@ -49,17 +49,16 @@ public class PaymentController implements TelegramController {
                 answerPreCheckoutQuery.setOk(false);
                 answerPreCheckoutQuery.setErrorMessage("Сумма заказа была изменена");
 
-                telegramService.sendMessage(new SendMessage(chatId.toString(),
+                telegramService.sendMessage(new SendMessage(preCheckout.getFrom().getId().toString(),
                         "Сумма заказа была изменена, оформите заказ еще раз"));
                 }
 
             telegramService.sendAnswerPreCheckoutQuery(answerPreCheckoutQuery);
     }
 
-    private void successfulPayment(Long chatId, SuccessfulPayment successfulPayment) {
-        orderService.updateOrderStatusToPaid(successfulPayment);
+    private void successfulPayment(Long chatId, String orderId) {
+        orderService.updateOrderStatusToPaid(orderId);
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
-                "Заказ №" + successfulPayment.getInvoicePayload() + " оплачен",
-                chatId);
+                "Заказ №" + orderId + " оплачен", chatId);
     }
 }

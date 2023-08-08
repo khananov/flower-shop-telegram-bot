@@ -34,13 +34,19 @@ public class StartController implements TelegramController {
 
     @Override
     public void execute(Update update) {
-        startMessage(update.getMessage());
+        if (update.getMessage().getText().equals(START_COMMAND.getValue()))
+            createUser(update.getMessage());
+        else if (update.getMessage().getText().equals(MAIN_MENU_COMMAND.getValue()))
+            startMessage(update.getMessage().getChatId());
     }
 
-    private void startMessage(Message message) {
-        telegramUserService.saveNewUser(message);
+    private void startMessage(Long chatId) {
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
                 "Выберите действие",
-                message.getChatId());
+                chatId);
+    }
+
+    private void createUser(Message message) {
+        telegramUserService.saveNewUser(message);
     }
 }

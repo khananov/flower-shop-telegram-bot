@@ -14,7 +14,6 @@ import ru.khananov.services.TelegramUserService;
 import static ru.khananov.models.domains.Command.CONFIRM_COMMAND;
 import static ru.khananov.models.domains.Command.REJECT_COMMAND;
 import static ru.khananov.models.enums.UserStatus.WAITING_ADDRESS_INPUT;
-import static ru.khananov.models.enums.UserStatus.WAITING_NAME_INPUT;
 
 @Controller
 public class RegistrationAddressController implements TelegramController {

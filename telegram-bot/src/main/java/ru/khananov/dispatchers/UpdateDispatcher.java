@@ -20,7 +20,6 @@ import java.util.List;
 public class UpdateDispatcher {
     private final StartController startController;
     private final CatalogController catalogController;
-    private final CategoryController categoryController;
     private final CartController cartController;
     private final BuyController buyController;
     private final ProductInOrderController productInOrderController;
@@ -34,7 +33,6 @@ public class UpdateDispatcher {
     @Autowired
     public UpdateDispatcher(StartController startController,
                             CatalogController catalogController,
-                            CategoryController categoryController,
                             CartController cartController,
                             BuyController buyController,
                             ProductInOrderController productInOrderController,
@@ -46,7 +44,6 @@ public class UpdateDispatcher {
                             PaymentController paymentController) {
         this.startController = startController;
         this.catalogController = catalogController;
-        this.categoryController = categoryController;
         this.cartController = cartController;
         this.buyController = buyController;
         this.productInOrderController = productInOrderController;
@@ -62,7 +59,6 @@ public class UpdateDispatcher {
         return Arrays.asList(
                 startController,
                 catalogController,
-                categoryController,
                 cartController,
                 buyController,
                 productInOrderController,

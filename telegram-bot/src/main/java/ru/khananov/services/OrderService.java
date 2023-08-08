@@ -13,7 +13,7 @@ public interface OrderService {
 
     void payForOrder(Long chatId);
 
-    void updateOrderStatusToPaid(SuccessfulPayment successfulPayment);
+    void updateOrderStatusToPaid(String orderId);
 
     boolean checkTotalAmountOrder(String orderId, Integer totalAmountPurchase);
 }

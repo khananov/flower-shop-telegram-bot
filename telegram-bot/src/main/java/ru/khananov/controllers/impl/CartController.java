@@ -25,7 +25,8 @@ public class CartController implements TelegramController {
     @Autowired
     public CartController(TelegramService telegramService,
                           CartService cartService,
-                          ProductForCartService productForCartService, OrderService orderService) {
+                          ProductForCartService productForCartService,
+                          OrderService orderService) {
         this.telegramService = telegramService;
         this.cartService = cartService;
         this.productForCartService = productForCartService;

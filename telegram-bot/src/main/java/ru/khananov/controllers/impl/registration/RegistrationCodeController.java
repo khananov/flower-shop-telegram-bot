@@ -54,9 +54,10 @@ public class RegistrationCodeController implements TelegramController {
     }
 
     private void cancelInputCode(Long chatId) {
+        TemporalCodeCache.getInstance().deleteCodeByChatId(chatId);
+
         telegramUserService.updateUserStatus(chatId, REGISTERED);
         telegramService.sendMessage(new SendMessage(chatId.toString(), "Подтверждение почты отменено!"));
-        TemporalCodeCache.getInstance().deleteCodeByChatId(chatId);
         telegramService.sendReplyKeyboard(MyGeneralMenuKeyboardMarkup.getGeneralMenuReplyKeyboardMarkup(),
                 "Выберите действие",
                 chatId);
