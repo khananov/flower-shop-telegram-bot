@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.invoices.SendInvoice;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.payments.LabeledPrice;
-import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
 import ru.khananov.exceptions.OrderNotFoundException;
 import ru.khananov.models.domains.inlinekeyboard.MyCancelOrderInlineKeyboardMarkup;
 import ru.khananov.models.entities.Order;
@@ -51,9 +50,7 @@ public class OrderServiceImpl implements ru.khananov.services.OrderService {
     public Order findLastOrderByChatId(Long chatId) {
         TelegramUser telegramUser = telegramUserService.findByChatId(chatId);
 
-        List<Order> orders = orderRepository.findAllByTelegramUserId(telegramUser.getId());
-
-        Order lastOrder = orders.stream()
+        Order lastOrder = telegramUser.getOrders().stream()
                 .filter(o -> o.getOrderStatus() == NEW)
                 .findFirst()
                 .orElse(null);

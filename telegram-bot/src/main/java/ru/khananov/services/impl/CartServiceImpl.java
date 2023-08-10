@@ -1,7 +1,6 @@
 package ru.khananov.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -11,25 +10,20 @@ import ru.khananov.models.entities.ProductForCart;
 import ru.khananov.repositories.OrderRepository;
 import ru.khananov.services.CartService;
 import ru.khananov.services.OrderService;
-import ru.khananov.services.ProductForCartService;
 import ru.khananov.services.TelegramService;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
-    private final ProductForCartService productForCartService;
     private final OrderRepository orderRepository;
     private final OrderService orderService;
     private final TelegramService telegramService;
 
     @Autowired
-    public CartServiceImpl(@Lazy ProductForCartService productForCartService,
-                           OrderRepository orderRepository,
+    public CartServiceImpl(OrderRepository orderRepository,
                            OrderService orderService,
                            TelegramService telegramService) {
-        this.productForCartService = productForCartService;
         this.orderRepository = orderRepository;
         this.orderService = orderService;
         this.telegramService = telegramService;
@@ -38,9 +32,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void sendProductsInOrder(Long chatId) {
         Order order = orderService.findLastOrderByChatId(chatId);
-        List<ProductForCart> products = productForCartService.findAllByOrderId(order.getId());
 
-        products.forEach(product -> telegramService.sendInlineKeyboard(
+        order.getProductsForCart().forEach(product -> telegramService.sendInlineKeyboard(
                 MyProductInOrderInlineKeyboard.getProductsInOrderKeyboardMarkup(),
                 getTextForProductInOrder(product),
                 chatId));

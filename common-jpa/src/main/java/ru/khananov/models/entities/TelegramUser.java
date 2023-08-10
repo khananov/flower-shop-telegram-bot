@@ -37,7 +37,6 @@ public class TelegramUser implements Serializable {
     @Column
     private String username;
 
-
     @Column
     private String email;
 

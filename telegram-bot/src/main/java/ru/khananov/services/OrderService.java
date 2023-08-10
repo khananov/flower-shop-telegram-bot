@@ -1,7 +1,6 @@
 package ru.khananov.services;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
 import ru.khananov.models.entities.Order;
 
 public interface OrderService {

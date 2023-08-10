@@ -10,8 +10,6 @@ public interface ProductForCartService {
 
     List<ProductForCart> findAllByChatId(Long chatId);
 
-    List<ProductForCart> findAllByOrderId(Long orderId);
-
     void plusAmount(Message message);
 
     void minusAmount(Message message);

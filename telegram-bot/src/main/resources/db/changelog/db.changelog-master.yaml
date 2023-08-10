@@ -19,3 +19,5 @@ databaseChangeLog:
       file: db/changelog/changeset/insertdata/v.1.2-insert-products.yaml
   - include:
       file: db/changelog/changeset/insertdata/v.1.3-insert-products.yaml
+  - include:
+      file: db/changelog/changeset/insertdata/v.1.4-insert-security-users.yaml

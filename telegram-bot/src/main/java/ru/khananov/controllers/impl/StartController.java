@@ -48,5 +48,6 @@ public class StartController implements TelegramController {
 
     private void createUser(Message message) {
         telegramUserService.saveNewUser(message);
+        startMessage(message.getChatId());
     }
 }

@@ -62,11 +62,6 @@ public class ProductForCartServiceImpl implements ProductForCartService {
     }
 
     @Override
-    public List<ProductForCart> findAllByOrderId(Long orderId) {
-        return productForCartRepository.findAllByOrderId(orderId);
-    }
-
-    @Override
     public void plusAmount(Message message) {
         int indexOfNewLine = message.getText().indexOf('\n');
         String productName = message.getText().substring(0, indexOfNewLine);

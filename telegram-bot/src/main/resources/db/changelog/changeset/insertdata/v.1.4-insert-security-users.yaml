@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: v.1.4-insert-security-users
+      author: khananov
+      changes:
+        - insert:
+            tableName: security_user
+            columns:
+              - column:
+                  name: username
+                  value: tim
+              - column:
+                  name: password
+                  value: $2a$12$BLlRWBSknzj9saFP7US9oO3WgdYdNKQrQwPlzb4bdz0ZItZeF45Hm
+              - column:
+                  name: role
+                  value: ADMIN
+
+        - insert:
+            tableName: security_user
+            columns:
+              - column:
+                  name: username
+                  value: user
+              - column:
+                  name: password
+                  value: $12$XPz4H90DUsf1CayALLgfAOREYPVOBpZ2/CHyqoVQtgv3Vkljh.L0W
+              - column:
+                  name: role
+                  value: USER

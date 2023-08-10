@@ -17,3 +17,5 @@
 /common-utils/common-utils.iml
 /telegram-bot/src/main/resources/META-INF/
 /admin-panel/src/main/resources/application.properties
+/mail-service/src/main/resources/META-INF/
+/out/
