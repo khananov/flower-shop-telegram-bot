@@ -28,7 +28,7 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "telegram_user_id", referencedColumnName = "id")
     private TelegramUser telegramUser;
 
