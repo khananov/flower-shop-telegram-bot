@@ -1,0 +1,70 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:15
+    container_name: db-postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: flower_shop_telegram_bot
+    volumes:
+      - /var/lib/postgresql/data
+    restart:
+      unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.12
+    container_name: rabbit
+    ports:
+      - 15672:15672
+      - 5672:5672
+    hostname: localhost
+    environment:
+      - RABBITMQ_DEFAULT_USER=timur
+      - RABBITMQ_DEFAULT_PASS=timur
+    volumes:
+      - /var/lib/rabbitmq
+    restart:
+      unless-stopped
+
+  telegram-bot:
+    image: telegram-bot:1.0-SNAPSHOT
+    container_name: telegram-bot
+    ports:
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/flower_shop_telegram_bot
+      SPRING_RABBITMQ_HOST: rabbitmq
+    restart:
+      unless-stopped
+    depends_on:
+      - db
+      - rabbitmq
+
+  mail-service:
+    image: mail-service:1.0-SNAPSHOT
+    container_name: mail-service
+    ports:
+      - 8082:8082
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    restart:
+      unless-stopped
+    depends_on:
+      - rabbitmq
+      - telegram-bot
+
+  admin-panel:
+    image: admin-panel:1.0-SNAPSHOT
+    container_name: admin-panel
+    ports:
+      - 8083:8083
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/flower_shop_telegram_bot
+    restart:
+      unless-stopped
+    depends_on:
+      - db
