@@ -1,17 +1,11 @@
 package ru.khananov.models.domains;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.khananov.models.entities.Product;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collections;
 
 import static ru.khananov.models.domains.Command.BUY_COMMAND;
