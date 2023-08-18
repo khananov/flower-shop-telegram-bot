@@ -20,4 +20,4 @@ databaseChangeLog:
                   value: 2
               - column:
                   name: photo_url
-                  value: telegram-bot/src/main/resources/static/chamomile.png
+                  value: https://disk.yandex.ru/i/C7sRQNys4QibIg

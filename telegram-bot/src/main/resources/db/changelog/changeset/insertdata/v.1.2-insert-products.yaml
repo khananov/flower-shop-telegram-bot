@@ -20,4 +20,4 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: photo_url
-                  value: telegram-bot/src/main/resources/static/alstromeria.png
+                  value: https://disk.yandex.ru/i/xiC35zTAJmLZ4Q
