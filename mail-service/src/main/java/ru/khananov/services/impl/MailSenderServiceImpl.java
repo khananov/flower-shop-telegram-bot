@@ -6,13 +6,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ru.khananov.dto.MailParamsDto;
+import ru.khananov.exceptions.EmailIsNullException;
 import ru.khananov.services.MailSenderService;
 import ru.khananov.services.rabbit.MailProducerService;
 import ru.khananov.utils.CryptoTool;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class MailSenderServiceImpl implements MailSenderService {
@@ -34,6 +31,9 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     public void send(MailParamsDto mailParamsDto) {
+        if (!mailValidator(mailParamsDto))
+            throw new EmailIsNullException(mailParamsDto.getId());
+
         String mailTo = mailParamsDto.getEmailTo();
         String subject = "Подтверждение электронной почты";
         String code = getActivationMailPassword();
@@ -63,5 +63,9 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailMessage.setText(messageBody);
 
         return mailMessage;
+    }
+
+    private boolean mailValidator(MailParamsDto mailParamsDto) {
+        return mailParamsDto.getEmailTo() != null;
     }
 }
