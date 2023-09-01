@@ -1,11 +1,11 @@
 /.idea/
 /telegram-bot/target/
-/telegram-bot/src/main/resources/application.properties
+
 /logs/
 /common-jpa/target/
 /common-utils/target/
 /FlowerShopTelegramBot.iml
-/mail-service/src/main/resources/application.properties
+
 /mail-service/target/
 /admin-panel/target/
 /admin-panel/admin-panel.iml
@@ -16,6 +16,6 @@
 /common-jpa/common-jpa.iml
 /common-utils/common-utils.iml
 /telegram-bot/src/main/resources/META-INF/
-/admin-panel/src/main/resources/application.properties
+
 /mail-service/src/main/resources/META-INF/
 /out/
