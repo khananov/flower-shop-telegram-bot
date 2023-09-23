@@ -3,6 +3,7 @@ package ru.khananov.services.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.khananov.exceptions.ProductNotFoundException;
 import ru.khananov.models.domains.MyProductSendPhoto;
 import ru.khananov.models.entities.Product;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @Log4j2
+@Transactional
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final TelegramService telegramService;

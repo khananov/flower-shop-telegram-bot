@@ -32,7 +32,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "telegram_user_id", referencedColumnName = "id")
     private TelegramUser telegramUser;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.MERGE)
     private List<ProductForCart> productsForCart;
 
     @Column(name = "order_status")

@@ -10,11 +10,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>telegram-bot</module>
-        <module>admin-panel</module>
         <module>common-jpa</module>
-        <module>mail-service</module>
         <module>common-utils</module>
+        <module>telegram-bot</module>
+        <module>mail-service</module>
+        <module>admin-panel</module>
     </modules>
 
     <properties>

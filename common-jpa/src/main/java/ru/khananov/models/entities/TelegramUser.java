@@ -47,6 +47,6 @@ public class TelegramUser implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-    @OneToMany(mappedBy = "telegramUser", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "telegramUser")
     private List<Order> orders;
 }

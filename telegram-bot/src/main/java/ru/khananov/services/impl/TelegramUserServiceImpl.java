@@ -3,6 +3,7 @@ package ru.khananov.services.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -21,6 +22,7 @@ import static ru.khananov.models.enums.UserStatus.*;
 
 @Service
 @Log4j2
+@Transactional
 public class TelegramUserServiceImpl implements TelegramUserService {
     private final TelegramService telegramService;
     private final TelegramUserRepository telegramUserRepository;
@@ -47,7 +49,7 @@ public class TelegramUserServiceImpl implements TelegramUserService {
     @Override
     public void saveNewUser(Message message) {
         try {
-            TelegramUser telegramUser = findByChatId(message.getChatId());
+            findByChatId(message.getChatId());
         } catch (UserNotFoundException e) {
             telegramUserRepository.save(buildTelegramUser(message));
         }

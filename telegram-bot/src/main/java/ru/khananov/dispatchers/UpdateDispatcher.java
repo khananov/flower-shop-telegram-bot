@@ -79,7 +79,7 @@ public class UpdateDispatcher {
         if (update.hasMessage() || update.hasCallbackQuery() || update.hasPreCheckoutQuery())
             distributeMessageByCommand(update);
         else
-            log.error(new UnsupportedMessageTypeException("Неподдерживаемый тип сообщения"));
+            log.error(new UnsupportedMessageTypeException("Unsupported message type"));
     }
 
     private void distributeMessageByCommand(Update update) {

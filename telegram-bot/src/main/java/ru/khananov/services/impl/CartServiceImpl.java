@@ -2,6 +2,7 @@ package ru.khananov.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import ru.khananov.models.domains.inlinekeyboard.MyProductInOrderInlineKeyboard;
@@ -15,6 +16,7 @@ import ru.khananov.services.TelegramService;
 import java.text.DecimalFormat;
 
 @Service
+@Transactional
 public class CartServiceImpl implements CartService {
     private final OrderRepository orderRepository;
     private final OrderService orderService;

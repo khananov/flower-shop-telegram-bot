@@ -3,6 +3,7 @@ package ru.khananov.services.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.khananov.exceptions.ProductForCartNotFoundException;
 import ru.khananov.exceptions.ProductNotFoundException;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 @Service
 @Log4j2
+@Transactional
 public class ProductForCartServiceImpl implements ProductForCartService {
     private final ProductForCartRepository productForCartRepository;
     private final OrderService orderService;
